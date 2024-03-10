@@ -1,4 +1,4 @@
-package ru.pinchuk.fileExchange.enity;
+package ru.pinchuk.fileExchange.entity;
 
 import javax.persistence.*;
 

@@ -1,17 +1,17 @@
-package ru.pinchuk.fileExchange.enity;
+package ru.pinchuk.fileExchange.entity;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "statuses")
-public class RequestStatus {
+@Table(name = "roles")
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "name", nullable = false)
     private String name;
 
-    public RequestStatus() {
+    public Role() {
     }
 
     public Long getId() {
@@ -28,5 +28,13 @@ public class RequestStatus {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Role{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }
