@@ -21,6 +21,13 @@ public class User {
     public User() {
     }
 
+    public User(String login, String password, String email, Role role) {
+        this.login = login;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+    }
+
     public Long getId() {
         return id;
     }
@@ -67,6 +74,7 @@ public class User {
                 "id=" + id +
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
                 ", role=" + role +
                 '}';
     }
