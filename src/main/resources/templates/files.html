@@ -3,15 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Файлы</title>
-    <link href="../static/css/login.css" media="all" rel="stylesheet"
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../static/css/files.css" media="all" rel="stylesheet"
           th:href="@{/css/files.css}" type="text/css"/>
 </head>
 <body>
-    <button>Добавить файл</button>
+
     <table>
         <tr th:each="obj: ${res}">
             <td th:text="${{obj.get().objectName()}}" />
         </tr>
     </table>
+    <form method="get" action="/files/add">
+        <button type="submit">Добавить файл</button>
+    </form>
+
 </body>
 </html>

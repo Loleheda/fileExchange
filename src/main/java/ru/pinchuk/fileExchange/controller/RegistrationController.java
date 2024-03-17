@@ -11,6 +11,9 @@ import ru.pinchuk.fileExchange.entity.User;
 import ru.pinchuk.fileExchange.service.RoleService;
 import ru.pinchuk.fileExchange.service.UserService;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 @Controller
 @RequestMapping("/registration")
@@ -29,22 +32,21 @@ public class RegistrationController {
 
     @GetMapping()
     public String getRegistration(Model model) {
-        model.getAttribute("error");
+
         System.out.println(model.getAttribute("error"));
         return "/registration";
     }
 
     @PostMapping()
-    public String createUser(String login, String email, String pass, Model model) {
-
+    public String createUser(String login, String email, String pass) {
         String password = passwordEncoder.encode(pass);
         if (!login.isEmpty() || !email.isEmpty() || !password.isEmpty()) {
-            model.addAttribute("error", "Введите логин, почту, пароль");
-            return "redirect:/registration";
+//            model.addAttribute("error", "Введите логин, почту, пароль");
+            return "/registration";
         }
         if (userService.findByLogin(login) != null || userService.findByEmail(email) != null) {
-            model.addAttribute("error", "Пользователь с таким именем или почтой уже существует");
-            return "redirect:/registration";
+//            model.addAttribute("error", "Пользователь с таким именем или почтой уже существует");
+            return "/registration";
         }
         userService.addUser(new User(login, password, email, roleService.getRoleByName("USER")));
         return "redirect:/login";
