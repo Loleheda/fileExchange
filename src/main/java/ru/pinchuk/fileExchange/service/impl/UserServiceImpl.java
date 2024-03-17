@@ -1,8 +1,6 @@
 package ru.pinchuk.fileExchange.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.core.userdetails.UsernameNotFoundException;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.pinchuk.fileExchange.entity.User;
 import ru.pinchuk.fileExchange.repository.RoleRepository;
@@ -15,20 +13,18 @@ public class UserServiceImpl implements ru.pinchuk.fileExchange.service.UserServ
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-//    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository/*, BCryptPasswordEncoder passwordEncoder*/) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
-//        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public User addUser(User user) {
         user.setPassword(user.getPassword());
         user.setEmail(user.getEmail());
-        user.setRole(roleRepository.findRoleByName("ROLE_USER"));
+        user.setRole(roleRepository.findRoleByName("USER"));
         User newUser = userRepository.save(user);
         System.out.println(newUser);
         return newUser;
