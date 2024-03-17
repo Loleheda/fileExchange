@@ -7,6 +7,11 @@
           th:href="@{/css/files.css}" type="text/css"/>
 </head>
 <body>
-    123
+    <button>Добавить файл</button>
+    <table>
+        <tr th:each="obj: ${res}">
+            <td th:text="${{obj.get().objectName()}}" />
+        </tr>
+    </table>
 </body>
 </html>

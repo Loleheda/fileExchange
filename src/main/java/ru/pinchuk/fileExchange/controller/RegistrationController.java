@@ -29,7 +29,8 @@ public class RegistrationController {
 
     @GetMapping()
     public String getRegistration(Model model) {
-        model.addAttribute("error", "");
+        model.getAttribute("error");
+        System.out.println(model.getAttribute("error"));
         return "/registration";
     }
 
@@ -37,6 +38,10 @@ public class RegistrationController {
     public String createUser(String login, String email, String pass, Model model) {
 
         String password = passwordEncoder.encode(pass);
+        if (!login.isEmpty() || !email.isEmpty() || !password.isEmpty()) {
+            model.addAttribute("error", "Введите логин, почту, пароль");
+            return "redirect:/registration";
+        }
         if (userService.findByLogin(login) != null || userService.findByEmail(email) != null) {
             model.addAttribute("error", "Пользователь с таким именем или почтой уже существует");
             return "redirect:/registration";
