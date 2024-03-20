@@ -9,12 +9,17 @@ public class File {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
-    @JoinColumn(name="user", referencedColumnName="id", nullable = false)
-    private User user;
-    @Column(name = "url", nullable = false)
-    private String url;
+    @JoinColumn(name= "owner", referencedColumnName="id", nullable = false)
+    private User owner;
+    @Column(name = "name", nullable = false)
+    private String name;
 
     public File() {
+    }
+
+    public File(User owner, String name) {
+        this.owner = owner;
+        this.name = name;
     }
 
     public Long getId() {
@@ -25,19 +30,28 @@ public class File {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public User getOwner() {
+        return owner;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 
-    public String getUrl() {
-        return url;
+    public String getName() {
+        return name;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "File{" +
+                "id=" + id +
+                ", user=" + owner +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

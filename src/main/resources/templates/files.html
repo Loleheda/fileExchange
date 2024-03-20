@@ -9,14 +9,28 @@
 </head>
 <body>
 
-    <table>
+
+
+    <table class="box">
+        <tr>
+            <th>Имя файла</th>
+            <th>Размер</th>
+            <th>
+                <form method="get" action="/files/add">
+                    <button type="submit">Добавить файл</button>
+                </form>
+            </th>
+        </tr>
         <tr th:each="obj: ${res}">
             <td th:text="${{obj.get().objectName()}}" />
+            <td th:text="${{obj.get().size()}}" />
+            <td>
+                <form method="get" th:action="@{|/files/${obj.get().objectName()}/delete|}">
+                    <button type="submit">Удалить</button>
+                </form>
+            </td>
         </tr>
     </table>
-    <form method="get" action="/files/add">
-        <button type="submit">Добавить файл</button>
-    </form>
 
 </body>
 </html>

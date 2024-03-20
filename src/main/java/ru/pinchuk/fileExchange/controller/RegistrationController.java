@@ -11,44 +11,36 @@ import ru.pinchuk.fileExchange.entity.User;
 import ru.pinchuk.fileExchange.service.RoleService;
 import ru.pinchuk.fileExchange.service.UserService;
 
-import java.util.HashMap;
-import java.util.Map;
-
 
 @Controller
 @RequestMapping("/registration")
 public class RegistrationController {
 
     private final UserService userService;
-    private final RoleService roleService;
-    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public RegistrationController(UserService userService, RoleService roleService, BCryptPasswordEncoder passwordEncoder) {
+    public RegistrationController(UserService userService) {
         this.userService = userService;
-        this.roleService = roleService;
-        this.passwordEncoder = passwordEncoder;
+
     }
 
     @GetMapping()
     public String getRegistration(Model model) {
-
-        System.out.println(model.getAttribute("error"));
         return "/registration";
     }
 
     @PostMapping()
-    public String createUser(String login, String email, String pass) {
-        String password = passwordEncoder.encode(pass);
-        if (!login.isEmpty() || !email.isEmpty() || !password.isEmpty()) {
+    public String createUser(String login, String password, String email) {
+
+        if (login.length() < 3 || email.isEmpty() || password.isEmpty()) {
 //            model.addAttribute("error", "Введите логин, почту, пароль");
             return "/registration";
         }
-        if (userService.findByLogin(login) != null || userService.findByEmail(email) != null) {
+        if (userService.getByLogin(login) != null || userService.getByEmail(email) != null) {
 //            model.addAttribute("error", "Пользователь с таким именем или почтой уже существует");
             return "/registration";
         }
-        userService.addUser(new User(login, password, email, roleService.getRoleByName("USER")));
+        userService.addUser(login, password, email);
         return "redirect:/login";
     }
 }

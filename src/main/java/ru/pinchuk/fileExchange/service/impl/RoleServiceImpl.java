@@ -9,7 +9,7 @@ import ru.pinchuk.fileExchange.service.RoleService;
 @Service
 public class RoleServiceImpl implements RoleService {
 
-    RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
     @Autowired
     public RoleServiceImpl(RoleRepository roleRepository) {

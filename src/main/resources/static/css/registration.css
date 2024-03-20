@@ -1,7 +1,7 @@
 body {
     margin: 0;
     padding: 0;
-    background: #7d966c;
+    background: #3498DB;
     font-family: sans-serif;
 }
 
@@ -23,7 +23,6 @@ body {
     font-weight: 500;
 }
 
-/* Now we need to configure our inputs. */
 .box input[type = "text"],.box input[type = "password"] {
     border: 0;
     background: none;
