@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавление файла</title>
+    <link href="../static/css/addFile.css" media="all" rel="stylesheet"
+          th:href="@{/css/addFile.css}" type="text/css"/>
+</head>
+<body>
+
+    <form class="box" method="post" enctype="multipart/form-data" action="/files/add">
+        <div class="drop-zone">
+            <span class="drop-zone__prompt">Нажмите, чтобы выбрать файл</span>
+            <input type="file" name="file" class="drop-zone__input">
+        </div>
+        <button type="submit">Загрузить</button>
+    </form>
+
+    <script src="../static/js/addFile.js" th:src="@{/js/addFile.js}"></script>
+</body>
+</html>
