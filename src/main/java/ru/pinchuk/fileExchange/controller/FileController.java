@@ -1,10 +1,8 @@
 package ru.pinchuk.fileExchange.controller;
 
 import io.minio.*;
-import io.minio.errors.*;
 import io.minio.messages.Item;
 
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,20 +10,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import ru.pinchuk.fileExchange.component.MinioClientComponent;
-import ru.pinchuk.fileExchange.entity.File;
 import ru.pinchuk.fileExchange.service.FileService;
-import ru.pinchuk.fileExchange.service.UserService;
 
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 @Controller
 @RequestMapping("/files")
-@Configuration
 public class FileController {
 
     private final FileService fileService;
@@ -36,6 +28,7 @@ public class FileController {
 
     @GetMapping()
     public String getFiles(Model model) {
+
         String username = authenticationUsername();
         MinioClient minioClient = MinioClientComponent.getMinioClient();
         Iterator<Result<Item>> iterator = minioClient.listObjects(
