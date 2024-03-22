@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS public.users
     CONSTRAINT fk_role FOREIGN KEY (role)
         REFERENCES public.roles (id) MATCH SIMPLE
         ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+        ON DELETE CASCADE
 )
 
     TABLESPACE pg_default;
@@ -52,10 +52,10 @@ CREATE TABLE IF NOT EXISTS public.files
     owner integer NOT NULL,
     name text COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT files_pkey PRIMARY KEY (id),
-    CONSTRAINT fk_users FOREIGN KEY (owner)
+    CONSTRAINT fk_owner FOREIGN KEY (owner)
         REFERENCES public.users (id) MATCH SIMPLE
         ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+        ON DELETE CASCADE
 )
 
     TABLESPACE pg_default;
@@ -88,15 +88,15 @@ CREATE TABLE IF NOT EXISTS public.requests
     CONSTRAINT fk_file FOREIGN KEY (file)
         REFERENCES public.files (id) MATCH SIMPLE
         ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
-    CONSTRAINT fk_sender_user FOREIGN KEY (recipient)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_recipient_user FOREIGN KEY (recipient)
         REFERENCES public.users (id) MATCH SIMPLE
         ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
+        ON DELETE CASCADE,
     CONSTRAINT fk_status FOREIGN KEY (status)
         REFERENCES public.statuses (id) MATCH SIMPLE
         ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+        ON DELETE CASCADE
 )
 
     TABLESPACE pg_default;

@@ -16,6 +16,7 @@ import ru.pinchuk.fileExchange.repository.FileRepository;
 import ru.pinchuk.fileExchange.repository.UserRepository;
 import ru.pinchuk.fileExchange.service.FileService;
 
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -34,17 +35,18 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public List<File> getFilesByUser(User user) {
+    public List<File> getFilesByOwner(User user) {
         return fileRepository.findFilesByOwner(user);
     }
 
     @Override
-    public File getFileByName(String name) {
-        return fileRepository.findByOwnerAndName(userRepository.findByLogin(authenticationUsername()), name);
+    public File getFile(String name, User user) {
+        return fileRepository.findByOwnerAndName(user, name);
     }
 
     @Override
-    public File addFile(MultipartFile file) {
+    @Transactional
+    public String addFile(MultipartFile file, User user) {
         if (file == null) {
             throw new RuntimeException("Нет данного файла");
         }
@@ -52,14 +54,14 @@ public class FileServiceImpl implements FileService {
         try {
             minioClient.putObject(
                     PutObjectArgs.builder()
-                            .bucket(authenticationUsername()).object(file.getOriginalFilename())
+                            .bucket(user.getLogin()).object(file.getOriginalFilename())
                             .stream(file.getInputStream(), file.getSize(), -1)
                             .contentType(file.getContentType())
                             .build());
-            File newFile = new File(userRepository.findByLogin(authenticationUsername()), file.getOriginalFilename());
+            File newFile = new File(user, file.getOriginalFilename());
             fileRepository.save(newFile);
             System.out.println("Файл " + file.getOriginalFilename() + " добавлен");
-            return newFile;
+            return newFile.getName();
         } catch (IOException | ErrorResponseException | InsufficientDataException | InternalException |
                  InvalidKeyException | InvalidResponseException | NoSuchAlgorithmException | ServerException |
                  XmlParserException e) {
@@ -68,26 +70,21 @@ public class FileServiceImpl implements FileService {
         return null;
     }
 
-    @Transactional
     @Override
-    public Long deleteFile(String name) {
+    @Transactional
+    public Long deleteFile(String name, User user) {
         MinioClient minioClient = MinioClientComponent.getMinioClient();
-        Long id = 0L;
         try {
             minioClient.removeObject(
-                    RemoveObjectArgs.builder().bucket(authenticationUsername()).object(name).build());
-            id = fileRepository.deleteByOwnerAndName(
-                    userRepository.findByLogin(authenticationUsername()), name);
+                    RemoveObjectArgs.builder().bucket(user.getLogin()).object(name).build());
+            Long id = fileRepository.deleteByOwnerAndName(user, name);
             System.out.println("Файл " + name + " удален");
+            return id;
         } catch (XmlParserException | ErrorResponseException | InsufficientDataException | InternalException |
                  InvalidKeyException | InvalidResponseException | IOException | NoSuchAlgorithmException |
                  ServerException e) {
             System.out.println(e.getMessage());
         }
-        return id;
-    }
-
-    private String authenticationUsername() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
+        return null;
     }
 }

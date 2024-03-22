@@ -14,6 +14,10 @@ public class RequestStatus {
     public RequestStatus() {
     }
 
+    public RequestStatus(String name) {
+        this.name = name;
+    }
+
     public Long getId() {
         return id;
     }

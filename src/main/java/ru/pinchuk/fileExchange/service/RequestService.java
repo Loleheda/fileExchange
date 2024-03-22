@@ -5,5 +5,6 @@ import ru.pinchuk.fileExchange.entity.Request;
 import ru.pinchuk.fileExchange.entity.User;
 
 public interface RequestService {
-    Request getRequestByRecipientAndFile(String username, String fileName);
+    Request getByRecipientAndFile(User currentUser, String username, String fileName);
+    Request addRequest(User currentUser, String username, String fileName);
 }

@@ -5,11 +5,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.pinchuk.fileExchange.entity.Request;
-import ru.pinchuk.fileExchange.entity.RequestStatus;
+import ru.pinchuk.fileExchange.entity.User;
 import ru.pinchuk.fileExchange.service.RequestService;
 
+import javax.servlet.http.HttpSession;
+
 @Controller
-@RequestMapping("/{username}/{fileName}")
+@RequestMapping("/request")
 public class RequestController {
 
     private final RequestService requestService;
@@ -18,18 +20,15 @@ public class RequestController {
         this.requestService = requestService;
     }
 
-    @GetMapping()
-    public String getRequest(@PathVariable String username, @PathVariable String fileName) {
-        Request request = requestService.getRequestByRecipientAndFile(username, fileName);
-        String status = request.getStatus().getName();
-        switch (status) {
-            case "Доступен":
-                break;
-            case "Заблокирован":
-                break;
-            case "В процессе":
-                break;
+    @GetMapping("/{username}/{fileName}")
+    public String showRequest(@PathVariable String username, @PathVariable String fileName, HttpSession http) {
+        User currentUser = (User) http.getAttribute("user");
+        System.out.println(username);
+        System.out.println(fileName);
+        Request request = requestService.getByRecipientAndFile(currentUser, username, fileName);
 
-            return "/request";
+        System.out.println(request);
+
+        return "/request";
     }
 }

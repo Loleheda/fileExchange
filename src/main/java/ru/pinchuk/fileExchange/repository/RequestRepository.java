@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface RequestRepository extends JpaRepository<Request, Long> {
-//    List<Request> findRequestsByRecipient(User recipient);
     Request findRequestByRecipientAndFile(User recipient, File file);
+    Long deleteByFile(File file);
 }

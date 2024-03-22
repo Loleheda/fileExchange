@@ -1,9 +1,16 @@
 package ru.pinchuk.fileExchange.component;
 
+import io.minio.CopyObjectArgs;
+import io.minio.CopySource;
+import io.minio.DownloadObjectArgs;
 import io.minio.MinioClient;
-import org.springframework.stereotype.Component;
+import io.minio.errors.*;
 
-@Component
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
+//@Component
 public class MinioClientComponent {
     private static MinioClient minioClient;
 

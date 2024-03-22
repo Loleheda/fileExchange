@@ -31,7 +31,6 @@ public class RegistrationController {
 
     @PostMapping()
     public String createUser(String login, String password, String email) {
-
         if (login.length() < 3 || email.isEmpty() || password.isEmpty()) {
 //            model.addAttribute("error", "Введите логин, почту, пароль");
             return "/registration";

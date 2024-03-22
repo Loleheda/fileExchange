@@ -17,8 +17,6 @@ public class User {
     @OneToOne
     @JoinColumn(name="role", referencedColumnName="id", nullable = false)
     private Role role;
-    @Column(name = "enabled")
-    private boolean enabled;
 
     public User() {
     }
@@ -28,7 +26,6 @@ public class User {
         this.password = password;
         this.email = email;
         this.role = role;
-        this.enabled = true;
     }
 
     public Long getId() {
@@ -69,14 +66,6 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
     }
 
     @Override

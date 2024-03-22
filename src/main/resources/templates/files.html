@@ -9,8 +9,9 @@
 </head>
 <body>
 
-
-
+    <form method="get" action="/logout" class="out">
+        <button type="submit">Выйти</button>
+    </form>
     <table class="box">
         <tr>
             <th>Имя файла</th>
@@ -22,15 +23,18 @@
             </th>
         </tr>
         <tr th:each="obj: ${res}">
-            <td th:text="${{obj.get().objectName()}}" />
+            <td th:text="${{obj.get().objectName()}}" th:id="${{obj.get().objectName()}}"/>
             <td th:text="${{obj.get().size()}}" />
             <td>
-                <form method="get" th:action="@{|/files/${obj.get().objectName()}/delete|}">
-                    <button type="submit">Удалить</button>
-                </form>
+                <div>
+                    <form method="get" th:action="@{|/files/${obj.get().objectName()}/delete|}">
+                        <button type="submit">Удалить</button>
+                    </form>
+                    <button onclick="">Поделиться</button>
+                </div>
             </td>
         </tr>
     </table>
-
+    <script th:src="@{/js/files.js}" src="files.html"></script>
 </body>
 </html>

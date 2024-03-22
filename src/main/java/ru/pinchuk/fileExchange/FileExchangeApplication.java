@@ -19,11 +19,14 @@ public class FileExchangeApplication {
 	}
 
 	@Bean
-	CommandLineRunner commandLineRunner(UserService users, /*BCryptPasswordEncoder encoder,*/ RoleService roles) {
+	CommandLineRunner commandLineRunner(RoleService roles) {
 		return args -> {
-//			users.addUser(new User("user1", encoder.encode("password"), "user@gmail.com", roles.getRoleByName("USER")));
-//			System.out.println(users.findByLogin("admin"));
-//			users.findByEmail("123@gmail.com");
+//			if (roles.getRoleByName("USER") != null) {
+//				roles.addRole("USER");
+//			}
+//			if (roles.getRoleByName("ADMIN") != null) {
+//				roles.addRole("ADMIN");
+//			}
 		};
 	}
 

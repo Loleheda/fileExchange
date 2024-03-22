@@ -64,7 +64,7 @@ body {
     text-align: center;
 }
 
-.box button{
+button {
     border: 0;
     background: none;
     display: block;
@@ -79,6 +79,14 @@ body {
     cursor: pointer;
 }
 
-.box button{
+button{
     background: #2ECC71;
+}
+
+.add, .out {
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    text-align: center;
 }

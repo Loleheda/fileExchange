@@ -21,6 +21,12 @@ public class Request {
     public Request() {
     }
 
+    public Request(User recipient, File file, RequestStatus status) {
+        this.recipient = recipient;
+        this.status = status;
+        this.file = file;
+    }
+
     public Long getId() {
         return id;
     }
@@ -51,5 +57,15 @@ public class Request {
 
     public void setFile(File file) {
         this.file = file;
+    }
+
+    @Override
+    public String toString() {
+        return "Request{" +
+                "id=" + id +
+                ", recipient=" + recipient +
+                ", status=" + status +
+                ", file=" + file +
+                '}';
     }
 }

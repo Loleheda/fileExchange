@@ -2,9 +2,40 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Panel</title>
+    <title>Панель администратора</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../static/css/files.css" media="all" rel="stylesheet"
+          th:href="@{/css/adminPanel.css}" type="text/css"/>
 </head>
 <body>
-
+    <form method="get" action="/logout" class="out">
+        <button type="submit">Выйти</button>
+    </form>
+    <table class="box">
+        <tr>
+            <th>Логин</th>
+            <th>Почта</th>
+            <th>Роль</th>
+            <th>Пароль</th>
+            <th>
+                <form method="get" action="#">
+                    <button type="submit">Добавить админа</button>
+                </form>
+            </th>
+        </tr>
+        <tr th:each="user: ${users}">
+            <td th:text="${{user.getLogin()}}"/>
+            <td th:text="${{user.getEmail()}}"/>
+            <td th:text="${{user.getRole().getName()}}"/>
+            <td th:text="${{user.getPassword()}}"/>
+            <td>
+                <div>
+                    <form method="get" th:action="@{|/admin/user/${user.getLogin()}/delete|}">
+                        <button type="submit">Удалить</button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>

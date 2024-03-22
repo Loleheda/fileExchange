@@ -3,6 +3,7 @@ package ru.pinchuk.fileExchange.service.impl;
 import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
+import io.minio.RemoveBucketArgs;
 import io.minio.errors.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -51,15 +52,16 @@ public class UserServiceImpl implements ru.pinchuk.fileExchange.service.UserServ
     }
 
     @Override
-    public Long deleteUser(User user) {
-        userRepository.delete(user);
-        return user.getId();
-    }
-
-    @Override
-    public Long deleteUserById(Long id) {
-        userRepository.deleteById(id);
-        return id;
+    public Long deleteByLogin(String login) {
+        MinioClient minioClient = MinioClientComponent.getMinioClient();
+        try {
+            minioClient.removeBucket(RemoveBucketArgs.builder().bucket(login).build());
+            return userRepository.removeByLogin(login);
+        } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
+                 InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
+                 XmlParserException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     @Override
@@ -73,12 +75,7 @@ public class UserServiceImpl implements ru.pinchuk.fileExchange.service.UserServ
     }
 
     @Override
-    public User editUser(User user) {
-        return userRepository.saveAndFlush(user);
-    }
-
-    @Override
-    public List<User> getAll() {
-        return userRepository.findAll();
+    public List<User> getAllUser() {
+        return userRepository.findUsersByRole(roleRepository.findRoleByName("USER"));
     }
 }
