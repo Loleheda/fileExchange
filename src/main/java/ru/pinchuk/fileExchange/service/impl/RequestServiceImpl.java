@@ -1,52 +1,37 @@
 package ru.pinchuk.fileExchange.service.impl;
 
-import io.minio.DownloadObjectArgs;
-import io.minio.GetObjectArgs;
-import io.minio.MinioClient;
-import io.minio.ServerSideEncryptionCustomerKey;
-import io.minio.errors.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.pinchuk.fileExchange.component.MinioClientComponent;
 import ru.pinchuk.fileExchange.entity.File;
 import ru.pinchuk.fileExchange.entity.Request;
 import ru.pinchuk.fileExchange.entity.RequestStatus;
 import ru.pinchuk.fileExchange.entity.User;
-import ru.pinchuk.fileExchange.repository.FileRepository;
 import ru.pinchuk.fileExchange.repository.RequestRepository;
-import ru.pinchuk.fileExchange.repository.StatusRepository;
-import ru.pinchuk.fileExchange.repository.UserRepository;
-import ru.pinchuk.fileExchange.service.RequestService;
-
-import javax.crypto.SecretKey;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.InvalidKeyException;
-import java.security.KeyStore;
-import java.security.NoSuchAlgorithmException;
+import ru.pinchuk.fileExchange.service.*;
 
 @Service
 public class RequestServiceImpl implements RequestService {
 
     private final RequestRepository requestRepository;
-    private final FileRepository fileRepository;
-    private final UserRepository userRepository;
-    private final StatusRepository statusRepository;
+    private final FileService fileService;
+    private final UserService userService;
+    private final StatusService statusService;
+    private final MinioService minioService;
 
-    public RequestServiceImpl(RequestRepository requestRepository, FileRepository fileRepository, UserRepository userRepository,
-                              StatusRepository statusRepository) {
+    public RequestServiceImpl(RequestRepository requestRepository, FileService fileService, UserService userService,
+                              StatusService statusService, MinioService minioService) {
         this.requestRepository = requestRepository;
-        this.fileRepository = fileRepository;
-        this.userRepository = userRepository;
-        this.statusRepository = statusRepository;
+        this.fileService = fileService;
+        this.userService = userService;
+        this.statusService = statusService;
+        this.minioService = minioService;
     }
 
     @Override
     @Transactional
     public Request getByRecipientAndFile(User recipient, String username, String fileName) {
-        User owner = userRepository.findByLogin(username);
-        File file = fileRepository.findByOwnerAndName(owner, fileName);
+        User owner = userService.getByLogin(username);
+        File file = fileService.getFile(fileName, owner);
         Request request = requestRepository.findRequestByRecipientAndFile(recipient, file);
         if (request == null) {
             request = addRequest(recipient, username, fileName);
@@ -56,31 +41,19 @@ public class RequestServiceImpl implements RequestService {
             return null;
         }
         if (request.getStatus().getName().equals("Доступен")) {
-            MinioClient minioClient = MinioClientComponent.getMinioClient();
-            try {
-                minioClient.downloadObject(
-                        DownloadObjectArgs.builder()
-                                .bucket(owner.getLogin())
-                                .object(fileName)
-                                .filename(owner.getLogin() + " " + fileName)
-                                .build());
-            } catch (IOException | ErrorResponseException | InsufficientDataException | InternalException |
-                     InvalidKeyException | InvalidResponseException | NoSuchAlgorithmException | ServerException |
-                     XmlParserException e) {
-                throw new RuntimeException(e);
-            }
+            minioService.downloadObject(owner.getLogin(), fileName);
         }
         return request;
     }
 
     @Override
     public Request addRequest(User recipient, String username, String fileName) {
-        User owner = userRepository.findByLogin(username);
-        File file = fileRepository.findByOwnerAndName(owner, fileName);
+        User owner = userService.getByLogin(username);
+        File file = fileService.getFile(fileName, owner);
         if (file == null) {
             return null;
         }
-        RequestStatus status = statusRepository.findByName("Отправлен отправителю");
+        RequestStatus status = statusService.getByName("Отправлен отправителю");
         Request request = new Request(recipient, file, status);
         requestRepository.save(request);
         System.out.println("Запрос на файл " + fileName + " пользователя " + username + " создан");

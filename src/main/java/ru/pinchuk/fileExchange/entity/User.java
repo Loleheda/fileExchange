@@ -1,6 +1,7 @@
 package ru.pinchuk.fileExchange.entity;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "users")
@@ -13,6 +14,10 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
     @Column(name = "email", nullable = false)
+//    @Pattern(
+//            regexp = "^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(\\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@([a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\\.)*(gmail|[a-z][a-z])$",
+//            message = "Некорректный ввод почты"
+//    )
     private String email;
     @OneToOne
     @JoinColumn(name="role", referencedColumnName="id", nullable = false)
@@ -77,5 +82,18 @@ public class User {
                 ", email='" + email + '\'' +
                 ", role=" + role +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(login, user.login) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && Objects.equals(role, user.role);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, login, password, email, role);
     }
 }

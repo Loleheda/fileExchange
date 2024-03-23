@@ -4,9 +4,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-//import org.springframework.security.crypto.password.PasswordEncoder;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-//import org.springframework.security.crypto.password.PasswordEncoder;
 
 import ru.pinchuk.fileExchange.service.RoleService;
 import ru.pinchuk.fileExchange.service.UserService;
@@ -19,14 +16,20 @@ public class FileExchangeApplication {
 	}
 
 	@Bean
-	CommandLineRunner commandLineRunner(RoleService roles) {
+	CommandLineRunner commandLineRunner(RoleService roleService, UserService userService) {
 		return args -> {
-//			if (roles.getRoleByName("USER") != null) {
-//				roles.addRole("USER");
-//			}
-//			if (roles.getRoleByName("ADMIN") != null) {
-//				roles.addRole("ADMIN");
-//			}
+			if (roleService.getRoleByName("USER") == null) {
+				roleService.addRole("USER");
+			}
+			if (roleService.getRoleByName("ADMIN") == null) {
+				roleService.addRole("ADMIN");
+			}
+			if (userService.getByLogin("admin") == null) {
+				userService.addUser("admin", "admin", "admin@mail.com");
+			}
+			if (roleService.getRoleByName("ADMIN") == null) {
+				roleService.addRole("ADMIN");
+			}
 		};
 	}
 

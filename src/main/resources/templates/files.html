@@ -24,7 +24,7 @@
         </tr>
         <tr th:each="obj: ${res}">
             <td th:text="${{obj.get().objectName()}}" th:id="${{obj.get().objectName()}}"/>
-            <td th:text="${{obj.get().size()}}" />
+            <td th:text="${{obj.get().size()}}"/>
             <td>
                 <div>
                     <form method="get" th:action="@{|/files/${obj.get().objectName()}/delete|}">

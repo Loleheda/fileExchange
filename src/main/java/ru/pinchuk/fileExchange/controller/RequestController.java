@@ -23,12 +23,7 @@ public class RequestController {
     @GetMapping("/{username}/{fileName}")
     public String showRequest(@PathVariable String username, @PathVariable String fileName, HttpSession http) {
         User currentUser = (User) http.getAttribute("user");
-        System.out.println(username);
-        System.out.println(fileName);
         Request request = requestService.getByRecipientAndFile(currentUser, username, fileName);
-
-        System.out.println(request);
-
         return "/request";
     }
 }

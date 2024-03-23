@@ -1,67 +1,55 @@
 package ru.pinchuk.fileExchange.service.impl;
 
-import io.minio.BucketExistsArgs;
-import io.minio.MakeBucketArgs;
-import io.minio.MinioClient;
-import io.minio.RemoveBucketArgs;
-import io.minio.errors.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.pinchuk.fileExchange.component.MinioClientComponent;
 import ru.pinchuk.fileExchange.entity.User;
-import ru.pinchuk.fileExchange.repository.RoleRepository;
 import ru.pinchuk.fileExchange.repository.UserRepository;
+import ru.pinchuk.fileExchange.service.MinioService;
+import ru.pinchuk.fileExchange.service.RoleService;
 
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
+/**
+ * Сервис взаимодействия с пользователями
+ * */
 @Service
 public class UserServiceImpl implements ru.pinchuk.fileExchange.service.UserService {
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+    private final RoleService roleService;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final MinioService minioService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, RoleService roleService, BCryptPasswordEncoder passwordEncoder, MinioService minioService) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
+        this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
+        this.minioService = minioService;
     }
 
     @Override
     public User addUser(String login, String password, String email) {
-        User newUser =  new User(login, passwordEncoder.encode(password), email, roleRepository.findRoleByName("USER"));
-        try {
-            MinioClient minioClient = MinioClientComponent.getMinioClient();
-            boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket(newUser.getLogin()).build());
-            if (!found) {
-                minioClient.makeBucket(MakeBucketArgs.builder().bucket(newUser.getLogin()).build());
-            }
-            userRepository.save(newUser);
-            System.out.println("Пользователь " + newUser.getLogin() + " создан");
-        } catch (XmlParserException | ErrorResponseException | InsufficientDataException | InternalException |
-                 InvalidKeyException | InvalidResponseException | IOException | NoSuchAlgorithmException |
-                 ServerException e) {
-            System.out.println(e.getMessage());
-        }
+        User newUser =  new User(login, passwordEncoder.encode(password), email, roleService.getRoleByName("USER"));
+        minioService.addBucket(newUser);
+        userRepository.save(newUser);
+        System.out.println("Пользователь " + newUser.getLogin() + " создан");
+        return newUser;
+    }
+
+    @Override
+    public User addAdmin(String login, String password, String email) {
+        User newUser =  new User(login, passwordEncoder.encode(password), email, roleService.getRoleByName("ADMIN"));
+        userRepository.save(newUser);
+        System.out.println("Пользователь " + newUser.getLogin() + " создан");
         return newUser;
     }
 
     @Override
     public Long deleteByLogin(String login) {
-        MinioClient minioClient = MinioClientComponent.getMinioClient();
-        try {
-            minioClient.removeBucket(RemoveBucketArgs.builder().bucket(login).build());
-            return userRepository.removeByLogin(login);
-        } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
-                 InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
-                 XmlParserException e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        minioService.removeBucket(login);
+        return userRepository.removeByLogin(login);
     }
 
     @Override
@@ -76,6 +64,6 @@ public class UserServiceImpl implements ru.pinchuk.fileExchange.service.UserServ
 
     @Override
     public List<User> getAllUser() {
-        return userRepository.findUsersByRole(roleRepository.findRoleByName("USER"));
+        return userRepository.findUsersByRole(roleService.getRoleByName("USER"));
     }
 }
