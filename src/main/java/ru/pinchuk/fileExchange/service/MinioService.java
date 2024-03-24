@@ -16,8 +16,8 @@ public interface MinioService {
     void removeObject(User user, File file);
     void removeObject(String login, String fileName);
     void removeObjects(String bucket);
-    void downloadObject(User user, File file);
-    void downloadObject(String bucket, String fileName);
+    byte[] downloadObject(User user, File file);
+    byte[] downloadObject(String bucket, String fileName);
     List<Result<Item>> getObjectsByUser(User user);
     List<Result<Item>> getObjectsByUser(String login);
 }

@@ -4,37 +4,41 @@
     <meta charset="UTF-8">
     <title>Файлы</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="../static/css/files.css" media="all" rel="stylesheet"
-          th:href="@{/css/files.css}" type="text/css"/>
+    <link href="../static/css/all.css" media="all" rel="stylesheet"
+          th:href="@{/css/all.css}" type="text/css"/>
 </head>
 <body>
+    <div class="basis">
+        <form method="get" action="/logout" class="separateButton">
+            <button type="submit">Выйти</button>
+        </form>
+        <div class="box">
+            <table class="table">
+                <tr>
+                    <th>Имя файла</th>
+                    <th>Размер</th>
+                    <th style="width: 150px;">
+                        <form method="get" action="/files/add">
+                            <button type="submit">Добавить файл</button>
+                        </form>
+                    </th>
+                </tr>
+                <tr th:each="obj: ${res}">
+                    <td th:text="${{obj.get().objectName()}}" th:id="${{obj.get().objectName()}}"/>
+                    <td th:text="${{obj.get().size()}}"/>
+                    <td>
+                        <div>
+                            <form method="get" th:action="@{|/files/${obj.get().objectName()}/delete|}" >
+                                <button type="submit" class="separateButton">Удалить</button>
+                            </form>
+                            <button onclick="" class="separateButton">Поделиться</button>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
 
-    <form method="get" action="/logout" class="out">
-        <button type="submit">Выйти</button>
-    </form>
-    <table class="box">
-        <tr>
-            <th>Имя файла</th>
-            <th>Размер</th>
-            <th>
-                <form method="get" action="/files/add">
-                    <button type="submit">Добавить файл</button>
-                </form>
-            </th>
-        </tr>
-        <tr th:each="obj: ${res}">
-            <td th:text="${{obj.get().objectName()}}" th:id="${{obj.get().objectName()}}"/>
-            <td th:text="${{obj.get().size()}}"/>
-            <td>
-                <div>
-                    <form method="get" th:action="@{|/files/${obj.get().objectName()}/delete|}">
-                        <button type="submit">Удалить</button>
-                    </form>
-                    <button onclick="">Поделиться</button>
-                </div>
-            </td>
-        </tr>
-    </table>
     <script th:src="@{/js/files.js}" src="files.html"></script>
 </body>
 </html>

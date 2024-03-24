@@ -36,11 +36,7 @@ public class RequestServiceImpl implements RequestService {
         if (request == null) {
             request = addRequest(recipient, username, fileName);
             requestRepository.save(request);
-        }
-        if (request.getStatus().getName().equals("Заблокирован")) {
-            return null;
-        }
-        if (request.getStatus().getName().equals("Доступен")) {
+        } else if (request.getStatus().getName().equals("Доступен")) {
             minioService.downloadObject(owner.getLogin(), fileName);
         }
         return request;

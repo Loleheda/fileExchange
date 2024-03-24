@@ -3,23 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Добавление файла</title>
+    <link href="../static/css/all.css" media="all" rel="stylesheet"
+          th:href="@{/css/all.css}" type="text/css"/>
     <link href="../static/css/addFile.css" media="all" rel="stylesheet"
           th:href="@{/css/addFile.css}" type="text/css"/>
 </head>
 <body>
-
-    <form class="box" method="post" enctype="multipart/form-data" action="/files/add">
-        <div class="drop-zone">
-            <span class="drop-zone__prompt">Нажмите, чтобы выбрать файл</span>
-            <input type="file" name="file" class="drop-zone__input">
-        </div>
-        <button type="submit">Загрузить</button>
-    </form>
-    <form class="out" method="get" action="/files">
-        <button type="submit">Назад</button>
-    </form>
-
-
+    <div class="basis">
+        <form class="box" method="post" enctype="multipart/form-data" action="/files/add">
+            <div class="drop-zone">
+                <span class="drop-zone__prompt">Нажмите, чтобы выбрать файл</span>
+                <input type="file" name="file" class="drop-zone__input">
+            </div>
+            <button type="submit">Загрузить</button>
+        </form>
+        <form class="out" method="get" action="/files">
+            <button type="submit">Назад</button>
+        </form>
+    </div>
     <script src="../static/js/addFile.js" th:src="@{/js/addFile.js}"></script>
 </body>
 </html>

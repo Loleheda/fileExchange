@@ -34,6 +34,17 @@ public class FileServiceImpl implements FileService {
         return fileRepository.findByOwnerAndName(user, name);
     }
 
+    /**
+     * @param login
+     * @param fileName
+     * @return
+     */
+    @Override
+    public byte[] downloadFile(String login, String fileName) {
+        minioService.downloadObject(login, fileName);
+        return minioService.downloadObject(login, fileName);
+    }
+
     @Override
     @Transactional
     public String addFile(MultipartFile file, User user) {

@@ -3,6 +3,7 @@ package ru.pinchuk.fileExchange.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.pinchuk.fileExchange.entity.User;
 import ru.pinchuk.fileExchange.repository.UserRepository;
 import ru.pinchuk.fileExchange.service.MinioService;
@@ -47,6 +48,7 @@ public class UserServiceImpl implements ru.pinchuk.fileExchange.service.UserServ
     }
 
     @Override
+    @Transactional
     public Long deleteByLogin(String login) {
         minioService.removeBucket(login);
         return userRepository.removeByLogin(login);

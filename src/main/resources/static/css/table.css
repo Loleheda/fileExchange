@@ -1,0 +1,32 @@
+.basis {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -100%);
+}
+
+.box {
+    border-radius: 100px;
+    width: 1200px;
+    padding: 40px;
+    background: #606E8C;
+    text-align: center;
+}
+
+.table {
+    width: 100%;
+    margin-bottom: 20px;
+    border-radius: 600px;
+    border: 1px solid white;
+    border-collapse: collapse;
+    color: white;
+}
+.table th {
+    font-weight: bold;
+    padding: 5px;
+    background: #606E8C;
+    border: 1px solid white;
+}
+.table td {
+    border: 1px solid white;
+    padding: 5px;
+}

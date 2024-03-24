@@ -6,12 +6,13 @@ import io.minio.messages.DeleteObject;
 import io.minio.messages.Item;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ru.pinchuk.fileExchange.component.MinioClientConfig;
+import org.apache.commons.io.IOUtils;
 import ru.pinchuk.fileExchange.entity.File;
 import ru.pinchuk.fileExchange.entity.User;
 import ru.pinchuk.fileExchange.service.MinioService;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -22,10 +23,10 @@ import java.util.stream.Collectors;
 @Service
 public class MinioServiceImpl implements MinioService {
 
-    private final MinioClientConfig minioClientConfig;
+    private final MinioClient minioClient;
 
-    public MinioServiceImpl(MinioClientConfig minioClientConfig) {
-        this.minioClientConfig = minioClientConfig;
+    public MinioServiceImpl(MinioClient minioClient) {
+        this.minioClient = minioClient;
     }
 
     @Override
@@ -35,7 +36,7 @@ public class MinioServiceImpl implements MinioService {
 
     @Override
     public void addBucket(String bucket) {
-        MinioClient minioClient = minioClientConfig.getMinioClient();
+//        MinioClient minioClient = minioClientConfig.getMinioClient();
         try {
             boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucket).build());
             if (!found) {
@@ -50,7 +51,7 @@ public class MinioServiceImpl implements MinioService {
 
     @Override
     public void addObject(User user, MultipartFile file) {
-        MinioClient minioClient = minioClientConfig.getMinioClient();
+//        MinioClient minioClient = minioClientConfig.getMinioClient();
         try {
             minioClient.putObject(
                     PutObjectArgs.builder()
@@ -72,7 +73,7 @@ public class MinioServiceImpl implements MinioService {
 
     @Override
     public void removeObject(String login, String fileName) {
-        MinioClient minioClient = minioClientConfig.getMinioClient();
+//        MinioClient minioClient = minioClientConfig.getMinioClient();
         try {
             minioClient.removeObject(
                     RemoveObjectArgs.builder().bucket(login).object(fileName).build());
@@ -85,7 +86,7 @@ public class MinioServiceImpl implements MinioService {
 
     @Override
     public void removeObjects(String bucket) {
-        MinioClient minioClient = minioClientConfig.getMinioClient();
+//        MinioClient minioClient = minioClientConfig.getMinioClient();
         List<Result<Item>> files = getObjectsByUser(bucket);
         List<DeleteObject> objects = files.stream().map(itemResult -> {
             try {
@@ -102,30 +103,46 @@ public class MinioServiceImpl implements MinioService {
     }
 
     @Override
-    public void downloadObject(User user, File file) {
-        downloadObject(user.getLogin(), file.getName());
+    public byte[] downloadObject(User user, File file) {
+        return downloadObject(user.getLogin(), file.getName());
     }
 
     @Override
-    public void downloadObject(String bucket, String fileName) {
-        MinioClient minioClient = minioClientConfig.getMinioClient();
+    public byte[] downloadObject(String bucket, String fileName)  {
+//        MinioClient minioClient = minioClientConfig.getMinioClient();
+
         try {
-            minioClient.downloadObject(
-                    DownloadObjectArgs.builder()
+            InputStream stream = minioClient.getObject(
+                    GetObjectArgs.builder()
                             .bucket(bucket)
                             .object(fileName)
-                            .filename(bucket + " " + fileName)
                             .build());
+            byte[] content = IOUtils.toByteArray(stream);
+            stream.close();
+            return content;
         } catch (IOException | ErrorResponseException | InsufficientDataException | InternalException |
                  InvalidKeyException | InvalidResponseException | NoSuchAlgorithmException | ServerException |
                  XmlParserException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage());
         }
     }
+//        try {
+//            minioClient.downloadObject(
+//                    DownloadObjectArgs.builder()
+//                            .bucket(bucket)
+//                            .object(fileName)
+//                            .filename(bucket + " " + fileName)
+//                            .build());
+//        } catch (IOException | ErrorResponseException | InsufficientDataException | InternalException |
+//                 InvalidKeyException | InvalidResponseException | NoSuchAlgorithmException | ServerException |
+//                 XmlParserException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     @Override
     public void removeBucket(String bucket) {
-        MinioClient minioClient = minioClientConfig.getMinioClient();
+//        MinioClient minioClient = minioClientConfig.getMinioClient();
         try {
             removeObjects(bucket);
             minioClient.removeBucket(RemoveBucketArgs.builder().bucket(bucket).build());
@@ -143,7 +160,7 @@ public class MinioServiceImpl implements MinioService {
 
     @Override
     public List<Result<Item>> getObjectsByUser(String login) {
-        MinioClient minioClient = minioClientConfig.getMinioClient();
+//        MinioClient minioClient = minioClientConfig.getMinioClient();
         Iterator<Result<Item>> iterator = minioClient.listObjects(
                 ListObjectsArgs.builder().bucket(login).build()).iterator();
         List<Result<Item>> files = new ArrayList<>();

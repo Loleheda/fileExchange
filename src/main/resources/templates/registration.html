@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Регистрация</title>
-    <link href="../static/css/registration.css" media="all" rel="stylesheet"
-          th:href="@{/css/registration.css}" type="text/css"/>
+    <link href="../static/css/all.css" media="all" rel="stylesheet"
+          th:href="@{/css/all.css}" type="text/css"/>
 </head>
 <body>
+<div class="basis">
     <form class="box" method="post" th:action="registration">
         <h1>Регистрация</h1>
         <input type="text" placeholder="Введите логин" name="login">
@@ -14,9 +15,11 @@
         <input type="password" placeholder="Введите пароль" name="password">
         <button type="submit">Зарегистрироваться</button>
     </form>
-    <form method="get" action="/login" class="reg">
+    <form method="get" action="/login" class="separateButton">
         <button type="submit">Войти</button>
         <span th:text="${error}"></span>
     </form>
+</div>
+
 </body>
 </html>

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import ru.pinchuk.fileExchange.service.UserService;
 
 @Controller
-@RequestMapping("/admin")
+@RequestMapping(    "/admin")
 public class AdminController {
 
     private final UserService userService;
@@ -27,6 +27,11 @@ public class AdminController {
     public String deleteUser(@PathVariable String username) {
         Long id = userService.deleteByLogin(username);
         System.out.println("Пользователь с id: " + id + " удален");
-        return "redirect:/adminPanel";
+        return "redirect:/admin";
+    }
+
+    @GetMapping("/add" )
+    public String addAdmin() {
+        return "registration";
     }
 }
