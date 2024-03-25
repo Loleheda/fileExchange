@@ -31,13 +31,12 @@ public class RequestController {
     public String showRequest(@PathVariable String username, @PathVariable String fileName, HttpSession http, Model model) {
         User currentUser = (User) http.getAttribute("user");
         Request request = requestService.getByRecipientAndFile(currentUser, username, fileName);
+        model.addAttribute("req", request);
         return "/request";
     }
 
     @GetMapping("/{username}/{fileName}/download")
-    public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable String username, @PathVariable String fileName, HttpSession http) {
-        
-
+    public ResponseEntity<Object> downloadFile(@PathVariable String username, @PathVariable String fileName, HttpSession http) {
         byte[] data = fileService.downloadFile(username, fileName);
         ByteArrayResource resource = new ByteArrayResource(data);
         return ResponseEntity

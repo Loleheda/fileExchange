@@ -17,14 +17,16 @@ public class RequestServiceImpl implements RequestService {
     private final UserService userService;
     private final StatusService statusService;
     private final MinioService minioService;
+    private final EmailService emailService;
 
     public RequestServiceImpl(RequestRepository requestRepository, FileService fileService, UserService userService,
-                              StatusService statusService, MinioService minioService) {
+                              StatusService statusService, MinioService minioService, EmailService emailService) {
         this.requestRepository = requestRepository;
         this.fileService = fileService;
         this.userService = userService;
         this.statusService = statusService;
         this.minioService = minioService;
+        this.emailService = emailService;
     }
 
     @Override
@@ -36,6 +38,7 @@ public class RequestServiceImpl implements RequestService {
         if (request == null) {
             request = addRequest(recipient, username, fileName);
             requestRepository.save(request);
+            emailService.sendEmail(request);
         } else if (request.getStatus().getName().equals("Доступен")) {
             minioService.downloadObject(owner.getLogin(), fileName);
         }

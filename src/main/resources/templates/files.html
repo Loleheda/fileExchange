@@ -6,12 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="../static/css/all.css" media="all" rel="stylesheet"
           th:href="@{/css/all.css}" type="text/css"/>
+    <link href="../static/css/table.css" media="all" rel="stylesheet"
+          th:href="@{/css/table.css}" type="text/css"/>
 </head>
 <body>
     <div class="basis">
-        <form method="get" action="/logout" class="separateButton">
-            <button type="submit">Выйти</button>
-        </form>
         <div class="box">
             <table class="table">
                 <tr>
@@ -19,24 +18,27 @@
                     <th>Размер</th>
                     <th style="width: 150px;">
                         <form method="get" action="/files/add">
-                            <button type="submit">Добавить файл</button>
+                            <button type="submit" img>Добавить файл</button>
                         </form>
                     </th>
                 </tr>
                 <tr th:each="obj: ${res}">
-                    <td th:text="${{obj.get().objectName()}}" th:id="${{obj.get().objectName()}}"/>
+                    <td th:text="${{obj.get().objectName()}}"/>
                     <td th:text="${{obj.get().size()}}"/>
                     <td>
                         <div>
                             <form method="get" th:action="@{|/files/${obj.get().objectName()}/delete|}" >
                                 <button type="submit" class="separateButton">Удалить</button>
                             </form>
-                            <button onclick="" class="separateButton">Поделиться</button>
+                            <button class="separateButton" th:onclick="shareFile([[${session.user.getLogin()}]], [[${obj.get().objectName()}]])">Поделиться</button>
                         </div>
                     </td>
                 </tr>
             </table>
         </div>
+        <form method="get" action="/logout" class="separateButton">
+            <button type="submit">Выйти</button>
+        </form>
     </div>
 
     <script th:src="@{/js/files.js}" src="files.html"></script>

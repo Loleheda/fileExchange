@@ -36,7 +36,6 @@ public class MinioServiceImpl implements MinioService {
 
     @Override
     public void addBucket(String bucket) {
-//        MinioClient minioClient = minioClientConfig.getMinioClient();
         try {
             boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucket).build());
             if (!found) {
@@ -51,7 +50,6 @@ public class MinioServiceImpl implements MinioService {
 
     @Override
     public void addObject(User user, MultipartFile file) {
-//        MinioClient minioClient = minioClientConfig.getMinioClient();
         try {
             minioClient.putObject(
                     PutObjectArgs.builder()
@@ -73,7 +71,6 @@ public class MinioServiceImpl implements MinioService {
 
     @Override
     public void removeObject(String login, String fileName) {
-//        MinioClient minioClient = minioClientConfig.getMinioClient();
         try {
             minioClient.removeObject(
                     RemoveObjectArgs.builder().bucket(login).object(fileName).build());
@@ -86,20 +83,16 @@ public class MinioServiceImpl implements MinioService {
 
     @Override
     public void removeObjects(String bucket) {
-//        MinioClient minioClient = minioClientConfig.getMinioClient();
         List<Result<Item>> files = getObjectsByUser(bucket);
-        List<DeleteObject> objects = files.stream().map(itemResult -> {
+        for (int i = 0; i < files.size(); i++) {
             try {
-                return new DeleteObject(itemResult.get().objectName());
-            } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
-                     InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
+                removeObject(bucket, files.get(i).get().objectName());
+            } catch (IOException | ErrorResponseException | InsufficientDataException | InternalException |
+                     InvalidKeyException | InvalidResponseException | NoSuchAlgorithmException | ServerException |
                      XmlParserException e) {
                 throw new RuntimeException(e.getMessage());
             }
-
-        }).collect(Collectors.toList());
-        minioClient.removeObjects(
-                RemoveObjectsArgs.builder().bucket(bucket).objects(objects).build());
+        }
     }
 
     @Override
@@ -109,8 +102,6 @@ public class MinioServiceImpl implements MinioService {
 
     @Override
     public byte[] downloadObject(String bucket, String fileName)  {
-//        MinioClient minioClient = minioClientConfig.getMinioClient();
-
         try {
             InputStream stream = minioClient.getObject(
                     GetObjectArgs.builder()
@@ -126,23 +117,10 @@ public class MinioServiceImpl implements MinioService {
             throw new RuntimeException(e.getMessage());
         }
     }
-//        try {
-//            minioClient.downloadObject(
-//                    DownloadObjectArgs.builder()
-//                            .bucket(bucket)
-//                            .object(fileName)
-//                            .filename(bucket + " " + fileName)
-//                            .build());
-//        } catch (IOException | ErrorResponseException | InsufficientDataException | InternalException |
-//                 InvalidKeyException | InvalidResponseException | NoSuchAlgorithmException | ServerException |
-//                 XmlParserException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
+
 
     @Override
     public void removeBucket(String bucket) {
-//        MinioClient minioClient = minioClientConfig.getMinioClient();
         try {
             removeObjects(bucket);
             minioClient.removeBucket(RemoveBucketArgs.builder().bucket(bucket).build());
@@ -160,7 +138,6 @@ public class MinioServiceImpl implements MinioService {
 
     @Override
     public List<Result<Item>> getObjectsByUser(String login) {
-//        MinioClient minioClient = minioClientConfig.getMinioClient();
         Iterator<Result<Item>> iterator = minioClient.listObjects(
                 ListObjectsArgs.builder().bucket(login).build()).iterator();
         List<Result<Item>> files = new ArrayList<>();
