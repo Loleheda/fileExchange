@@ -47,7 +47,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     @Transactional
-    public String addFile(MultipartFile file, User user) {
+    public File addFile(MultipartFile file, User user) {
         if (file == null) {
             throw new RuntimeException("Нет данного файла");
         }
@@ -55,7 +55,7 @@ public class FileServiceImpl implements FileService {
         File newFile = new File(user, file.getOriginalFilename());
         fileRepository.save(newFile);
         System.out.println("Файл " + file.getOriginalFilename() + " добавлен");
-        return newFile.getName();
+        return newFile;
     }
 
     @Override

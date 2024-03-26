@@ -8,24 +8,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ru.pinchuk.fileExchange.entity.User;
 import ru.pinchuk.fileExchange.repository.RoleRepository;
 import ru.pinchuk.fileExchange.repository.UserRepository;
 import ru.pinchuk.fileExchange.service.MinioService;
-import ru.pinchuk.fileExchange.service.RoleService;
-import ru.pinchuk.fileExchange.service.impl.MinioServiceImpl;
-import ru.pinchuk.fileExchange.service.impl.RoleServiceImpl;
-import ru.pinchuk.fileExchange.service.impl.UserServiceImpl;
-
-import java.util.Collections;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
-
-
     @Mock
     private UserRepository userRepository;
     @Mock
@@ -35,7 +25,7 @@ public class UserServiceTest {
     @Mock
     private BCryptPasswordEncoder passwordEncoder;
     @Mock
-    private MinioService minioService;
+    private MinioServiceImpl minioService;
     @InjectMocks
     private UserServiceImpl userService;
 

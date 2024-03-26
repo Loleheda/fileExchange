@@ -10,6 +10,6 @@ public interface FileService {
     List<File> getFilesByOwner(User user);
     File getFile(String name, User user);
     byte[] downloadFile(String login, String fileName);
-    String addFile(MultipartFile file, User user);
+    File addFile(MultipartFile file, User user);
     Long deleteFile(String name, User user);
 }
