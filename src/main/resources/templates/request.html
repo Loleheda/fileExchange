@@ -7,9 +7,13 @@
           th:href="@{/css/all.css}" type="text/css"/>
 </head>
 <body>
-    <div th:switch="${req.getStatus().getName()}">
-        <p th:case="'Заблокирован'">Пользователь <span th:text="${req.getFile().getOwner().getLogin()}"></span> ограничил права на скачивание данного файла</p>
-        <p th:case="'Отправлен отправителю'">Запрос на подтверждение скачивание файла отправлен пользователю <span th:text="${req.getFile().getOwner().getLogin()}"></span></p>
+    <div class="basis">
+        <div class="box">
+            <div th:switch="${req.getStatus().getName()}">
+                <h3 th:case="'Заблокирован'">Пользователь <span th:text="${req.getFile().getOwner().getLogin()}"></span> ограничил права на скачивание данного файла</h3>
+                <h3 th:case="'Отправлен отправителю'">Запрос на подтверждение скачивания файла отправлен пользователю <span th:text="${req.getFile().getOwner().getLogin()}"></span></h3>
+            </div>
+        </div>
     </div>
 </body>
 </html>

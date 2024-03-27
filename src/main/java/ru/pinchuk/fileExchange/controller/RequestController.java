@@ -7,8 +7,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriComponentsBuilder;
 import ru.pinchuk.fileExchange.entity.Request;
+import ru.pinchuk.fileExchange.entity.RequestStatus;
 import ru.pinchuk.fileExchange.entity.User;
 import ru.pinchuk.fileExchange.service.FileService;
 import ru.pinchuk.fileExchange.service.RequestService;
@@ -39,14 +41,14 @@ public class RequestController {
         User currentUser = (User) http.getAttribute("user");
         Request request = requestService.getByRecipientAndFile(currentUser, username, fileName);
         if (request.getStatus().getName().equals("Доступен")) {
-            return String.format("/%s/%s/download", username, fileName);
+            return String.format("redirect:/request/%s/%s/download", username, fileName);
         }
         model.addAttribute("req", request);
         return "/request";
     }
 
     @GetMapping("/{username}/{fileName}/download")
-    public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable String username, @PathVariable String fileName, HttpSession http) {
+    public ResponseEntity<Object> downloadFile(@PathVariable String username, @PathVariable String fileName, HttpSession http) {
         byte[] data = fileService.downloadFile(username, fileName);
         ByteArrayResource resource = new ByteArrayResource(data);
         return ResponseEntity
@@ -61,15 +63,16 @@ public class RequestController {
     public String downloadFilePermission(@PathVariable String ownerName, @PathVariable String recipientName, @PathVariable String fileName, HttpSession http, Model model) {
         User currentUser = (User) http.getAttribute("user");
         if (!ownerName.equals(currentUser.getLogin()))  {
-            return "/files";
+            return "redirect:/files";
         }
         User recipient = userService.getByLogin(recipientName);
         Request request = requestService.getByRecipientAndFile(recipient, ownerName, fileName);
-        http.setAttribute("req", request);
+        // Необходимо, для корректный работы с названиями файлов на русском языке
         URI url = UriComponentsBuilder
-                .fromUriString("http://localhost:8080/request/{ownerName}/{recipientName}/{fileName}/isPermitted")
+                .fromUriString("/request/{ownerName}/{recipientName}/{fileName}/isPermitted")
                 .build(ownerName, recipientName, fileName);
-        model.addAttribute("url", url.getPath());
+        model.addAttribute("url", url);
+        http.setAttribute("req", request);
         model.addAttribute("req", request);
         return "/isPermitted";
     }

@@ -29,6 +29,7 @@ public class EmailServiceImpl implements EmailService {
         User owner = request.getFile().getOwner();
         String to = owner.getEmail();
         String subject = "Разрешение на скачивание файла " + request.getFile().getName();
+        // Необходимо, для корректный работы с названиями файлов на русском языке
         URI url = UriComponentsBuilder
                 .fromUriString("http://localhost:8080/request/{owner}/{recipient}/{fileName}/isPermitted")
                 .build(owner.getLogin(), request.getRecipient().getLogin(), request.getFile().getName());

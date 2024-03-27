@@ -10,9 +10,13 @@
     <div class="basis">
         <div class="box">
             <h3>Пользователь <span th:text="${req.getRecipient().getLogin()}"></span> хочет скачать файл. Разрешить?</h3>
-            <div>
-                <button th:action="@{|${url}/yes|}" type="submit">Да</button>
-                <button th:action="@{|${url}/no|}" type="submit">Нет</button>
+            <div style="display: flex">
+                <form th:action="@{|${url}/yes|}">
+                    <button type="submit">Да</button>
+                </form>
+                <form th:action="@{|${url}/no|}">
+                    <button type="submit">Нет</button>
+                </form>
             </div>
         </div>
     </div>
