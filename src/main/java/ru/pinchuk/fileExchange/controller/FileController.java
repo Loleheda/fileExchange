@@ -30,7 +30,6 @@ public class FileController {
     @GetMapping()
     public String getFiles(Model model, HttpSession http) {
         List<Result<Item>> files = minioService.getObjectsByUser((User) http.getAttribute("user"));
-//        fileService.getFilesByOwner()
         model.addAttribute("res", files);
         return "/files";
     }

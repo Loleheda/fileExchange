@@ -32,7 +32,7 @@ public class UserServiceImpl implements ru.pinchuk.fileExchange.service.UserServ
 
     @Override
     public User addUser(String login, String password, String email) {
-        User newUser =  new User(login, passwordEncoder.encode(password), email, roleService.getRoleByName("USER"));
+        User newUser =  new User(login, passwordEncoder.encode(password), email, roleService.getByName("USER"));
         minioService.addBucket(newUser);
         userRepository.save(newUser);
         System.out.println("Пользователь " + newUser.getLogin() + " создан");
@@ -41,7 +41,7 @@ public class UserServiceImpl implements ru.pinchuk.fileExchange.service.UserServ
 
     @Override
     public User addAdmin(String login, String password, String email) {
-        User newUser =  new User(login, passwordEncoder.encode(password), email, roleService.getRoleByName("ADMIN"));
+        User newUser =  new User(login, passwordEncoder.encode(password), email, roleService.getByName("ADMIN"));
         userRepository.save(newUser);
         System.out.println("Пользователь " + newUser.getLogin() + " создан");
         return newUser;
@@ -66,6 +66,6 @@ public class UserServiceImpl implements ru.pinchuk.fileExchange.service.UserServ
 
     @Override
     public List<User> getAllUser() {
-        return userRepository.findUsersByRole(roleService.getRoleByName("USER"));
+        return userRepository.findUsersByRole(roleService.getByName("USER"));
     }
 }

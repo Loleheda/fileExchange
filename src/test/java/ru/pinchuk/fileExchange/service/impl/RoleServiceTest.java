@@ -31,8 +31,8 @@ public class RoleServiceTest {
     public void getRoleByNameTest() {
         String roleName = "USER";
         Role role1 = roleService.addRole(roleName);
-        Mockito.when(roleRepository.findRoleByName(roleName)).thenReturn(role1);
-        Role role2 = roleService.getRoleByName(roleName);
+        Mockito.when(roleRepository.findByName(roleName)).thenReturn(role1);
+        Role role2 = roleService.getByName(roleName);
         Assertions.assertEquals(role1, role2);
     }
 }

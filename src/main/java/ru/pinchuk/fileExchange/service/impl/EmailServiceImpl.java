@@ -30,8 +30,8 @@ public class EmailServiceImpl implements EmailService {
         String to = owner.getEmail();
         String subject = "Разрешение на скачивание файла " + request.getFile().getName();
         URI url = UriComponentsBuilder
-                .fromUriString("http://localhost:8080/{owner}/{fileName}")
-                .build(owner.getLogin(), request.getFile().getName());
+                .fromUriString("http://localhost:8080/request/{owner}/{recipient}/{fileName}/isPermitted")
+                .build(owner.getLogin(), request.getRecipient().getLogin(), request.getFile().getName());
         String text = String.format(
                 "Здравствуте! Пользователь %s отправил Вам запрос на скачивание файла %s. Перейдите по ссылке %s, чтобы разреешить скачивание",
                 request.getRecipient().getLogin(),

@@ -12,7 +12,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ru.pinchuk.fileExchange.entity.User;
 import ru.pinchuk.fileExchange.repository.RoleRepository;
 import ru.pinchuk.fileExchange.repository.UserRepository;
-import ru.pinchuk.fileExchange.service.MinioService;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
@@ -43,13 +42,13 @@ public class UserServiceTest {
     @Test
     public void addUserTest() {
         User user = userService.addUser(login, password, email);
-        Assertions.assertEquals(user, new User(login, passwordEncoder.encode(password), email, roleRepository.findRoleByName("USER")));
+        Assertions.assertEquals(user, new User(login, passwordEncoder.encode(password), email, roleRepository.findByName("USER")));
     }
 
     @Test
     public void addAdminTest() {
         User user = userService.addAdmin(login, password, email);
-        Assertions.assertEquals(user, new User(login, passwordEncoder.encode(password), email, roleRepository.findRoleByName("ADMIN")));
+        Assertions.assertEquals(user, new User(login, passwordEncoder.encode(password), email, roleRepository.findByName("ADMIN")));
     }
 
     @Test

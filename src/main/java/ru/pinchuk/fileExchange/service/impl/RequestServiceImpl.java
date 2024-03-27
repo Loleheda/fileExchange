@@ -58,4 +58,15 @@ public class RequestServiceImpl implements RequestService {
         System.out.println("Запрос на файл " + fileName + " пользователя " + username + " создан");
         return request;
     }
+
+    /**
+     * @param request
+     * @param status
+     * @return
+     */
+    @Override
+    public Request updateStatus(Request request, RequestStatus status) {
+        request.setStatus(status);
+        return requestRepository.save(request);
+    }
 }

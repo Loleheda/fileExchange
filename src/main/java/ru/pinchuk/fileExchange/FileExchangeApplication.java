@@ -18,17 +18,17 @@ public class FileExchangeApplication {
 	@Bean
 	CommandLineRunner commandLineRunner(RoleService roleService, UserService userService) {
 		return args -> {
-			if (roleService.getRoleByName("USER") == null) {
+			if (roleService.getByName("USER") == null) {
 				roleService.addRole("USER");
 			}
-			if (roleService.getRoleByName("ADMIN") == null) {
+			if (roleService.getByName("ADMIN") == null) {
 				roleService.addRole("ADMIN");
 			}
 			if (userService.getByLogin("admin") == null) {
-				userService.addUser("admin", "admin", "admin@mail.com");
+				userService.addUser("admin", "admin", "admin@gmail.com");
 			}
-			if (roleService.getRoleByName("ADMIN") == null) {
-				roleService.addRole("ADMIN");
+			if (userService.getByLogin("user") == null) {
+				userService.addUser("user", "user", "user@gmail.com");
 			}
 		};
 	}

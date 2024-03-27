@@ -20,7 +20,7 @@ body {
     text-align: center;
 }
 
-h1 {
+h1, h3 {
     color: white;
     text-transform: uppercase;
     font-weight: 500;

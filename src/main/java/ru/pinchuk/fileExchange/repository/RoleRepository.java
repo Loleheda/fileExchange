@@ -6,5 +6,5 @@ import ru.pinchuk.fileExchange.entity.Role;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
-    Role findRoleByName(String name);
+    Role findByName(String name);
 }

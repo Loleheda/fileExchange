@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Разрешение на скачивание</title>
+    <link href="../static/css/all.css" media="all" rel="stylesheet"
+          th:href="@{/css/all.css}" type="text/css"/>
+</head>
+<body>
+    <div class="basis">
+        <div class="box">
+            <h3>Пользователь <span th:text="${req.getRecipient().getLogin()}"></span> хочет скачать файл. Разрешить?</h3>
+            <div>
+                <button th:action="@{|${url}/yes|}" type="submit">Да</button>
+                <button th:action="@{|${url}/no|}" type="submit">Нет</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
