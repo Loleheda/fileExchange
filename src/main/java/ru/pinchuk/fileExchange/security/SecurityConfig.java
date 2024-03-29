@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,10 +14,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final UserDetailsService userDetailsService;
+    private final CustomUserDetailsService userDetailsService;
 
-    public SecurityConfig(UserDetailsService userDetailsService) {
+    public SecurityConfig(CustomUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
+    }
+
+    @Override
+    public void configure(WebSecurity web) {
+        web.ignoring()
+                .antMatchers("/css/**", "/fonts/**", "/js/**", "/images/**");
     }
 
     @Override
@@ -32,23 +39,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/registration").permitAll()
-                .antMatchers("/files/**").hasRole(userRole)
-                .antMatchers("/request/**").hasRole(userRole)
-                .antMatchers("/admin/**").hasRole(adminRole)
-                .antMatchers("/css/**", "/fonts/**", "/js/**", "/images/**").permitAll()
-                .anyRequest().authenticated()
+                    .antMatchers("/registration").permitAll()
+                    .antMatchers("/files/**").hasRole(userRole)
+                    .antMatchers("/request/**").hasRole(userRole)
+                    .antMatchers("/admin/**").hasRole(adminRole)
+                    .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/login").defaultSuccessUrl("/login/distribution", true).permitAll()
+                    .loginPage("/login")
+                    .defaultSuccessUrl("/login/distribution", true).permitAll()
                 .and()
                 .logout().permitAll()
                 .and()
                 .logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login")
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID");
+                    .logoutUrl("/logout")
+                    .logoutSuccessUrl("/login")
+                    .invalidateHttpSession(true)
+                    .deleteCookies("JSESSIONID");
     }
 
     @Bean

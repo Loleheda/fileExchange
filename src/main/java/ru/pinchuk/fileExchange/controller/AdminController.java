@@ -4,7 +4,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ru.pinchuk.fileExchange.entity.User;
 import ru.pinchuk.fileExchange.service.UserService;
 
 @Controller
@@ -31,7 +33,14 @@ public class AdminController {
     }
 
     @GetMapping("/add" )
-    public String addAdmin() {
-        return "registration";
+    public String showAdmin(Model model) {
+        model.addAttribute("admin", new User());
+        return "/registrationAdmin";
+    }
+
+    @PostMapping("/add")
+    public String addAdmin(Model model) {
+        System.out.println(model.getAttribute("admin"));
+        return "redirect:/admin";
     }
 }
