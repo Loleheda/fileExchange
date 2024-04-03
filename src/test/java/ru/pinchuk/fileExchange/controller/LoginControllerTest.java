@@ -38,13 +38,13 @@ class LoginControllerTest {
     void showLoginErrorWhenErrorIsTrueTest() {
         String errorMessage = "Не верный логин или пароль";
         Mockito.when(model.addAttribute("errorMessage", errorMessage)).thenReturn(null);
-        String result = loginController.showLoginError(true, model);
+        String result = loginController.showLogin(true, model);
         assertEquals("/login", result);
     }
 
     @Test
     void showLoginErrorWhenErrorIsNullTest() {
-        String result = loginController.showLoginError(null, model);
+        String result = loginController.showLogin(null, model);
         assertEquals("/login", result);
     }
 

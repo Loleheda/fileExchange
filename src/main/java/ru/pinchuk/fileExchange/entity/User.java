@@ -14,10 +14,7 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
     @Column(name = "email", nullable = false)
-//    @Pattern(
-//            regexp = "^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(\\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@([a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\\.)*(gmail|[a-z][a-z])$",
-//            message = "Некорректный ввод почты"
-//    )
+
     private String email;
     @OneToOne
     @JoinColumn(name="role", referencedColumnName="id", nullable = false)

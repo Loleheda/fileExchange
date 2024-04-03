@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.pinchuk.fileExchange.service.UserService;
 
+/**
+ * Контроллер регистрации пользователей
+ */
 @Controller
 @RequestMapping("/registration")
 public class RegistrationController {
@@ -18,11 +21,24 @@ public class RegistrationController {
         this.userService = userService;
     }
 
+    /**
+     * Отображает страницу регистрации.
+     * @return представление страницы регистрации
+     */
     @GetMapping()
     public String getRegistration() {
         return "/registration";
     }
 
+    /**
+     * Создает нового пользователя
+     * @param error флаг ошибки регистрации
+     * @param login логин нового пользователя
+     * @param password пароль нового пользователя
+     * @param email электронная почта нового пользователя
+     * @param model объект Model для передачи данных в представление
+     * @return перенаправление на страницу входа в случае успешной регистрации, иначе представление страницы регистрации с сообщениями об ошибках
+     */
     @PostMapping()
     public String createUser(@RequestParam(required = false) Boolean error, String login, String password, String email, Model model) {
         if (login.length() < 3) {
@@ -41,7 +57,7 @@ public class RegistrationController {
             model.addAttribute("errorPasswordLengthMessage", "Пароль  должен быть больше 3 символов");
             error = true;
         }
-        if (error) {
+        if (error != null && error) {
             return "registration";
         }
         userService.addUser(login, password, email);

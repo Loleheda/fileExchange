@@ -11,6 +11,9 @@ import ru.pinchuk.fileExchange.service.UserService;
 
 import javax.servlet.http.HttpSession;
 
+/**
+ * Контроллер входа пользователей
+ */
 @Controller
 @RequestMapping("/login")
 public class LoginController {
@@ -21,14 +24,27 @@ public class LoginController {
         this.userService = userService;
     }
 
+    /**
+     * Отображает страницу входа с сообщением об ошибке, если оно есть.
+     *
+     * @param error флаг наличия ошибки входа
+     * @param model объект Model
+     * @return представление страницы входа
+     */
     @GetMapping
-    public String showLoginError(@RequestParam(required = false) Boolean error, Model model) {
+    public String showLogin(@RequestParam(required = false) Boolean error, Model model) {
         if (error != null && error) {
             model.addAttribute("errorMessage", "Не верный логин или пароль");
         }
         return "/login";
     }
 
+    /**
+     * Выполняет распределение пользователей на страницы в зависимости от их роли.
+     *
+     * @param http объект HttpSession
+     * @return перенаправление на страницу администратора или файлов пользователя в зависимости от роли пользователя
+     */
     @GetMapping("/distribution")
     public String distribution(HttpSession http) {
         User user = userService.getByLogin(SecurityContextHolder.getContext().getAuthentication().getName());

@@ -18,6 +18,9 @@ import ru.pinchuk.fileExchange.service.UserService;
 import javax.servlet.http.HttpSession;
 import java.net.URI;
 
+/**
+ * Контроллер для управления запросами на файлы
+ */
 @Controller
 @RequestMapping("/request")
 public class RequestController {
@@ -34,6 +37,14 @@ public class RequestController {
         this.statusService = statusService;
     }
 
+    /**
+     * Создает запрос на скачивание файла
+     * @param username логин отправителя запроса
+     * @param fileName имя файла
+     * @param http объект HttpSession
+     * @param model объект Model
+     * @return представление информации о запросе на файл
+     */
     @GetMapping("/{username}/{fileName}")
     public String showRequest(@PathVariable String username, @PathVariable String fileName, HttpSession http, Model model) {
         User currentUser = (User) http.getAttribute("user");
@@ -45,6 +56,12 @@ public class RequestController {
         return "/request";
     }
 
+    /**
+     * Обрабатывает скачивание файла
+     * @param username логин отправителя запроса
+     * @param fileName имя файла
+     * @return содержимое файла для скачивания
+     */
     @GetMapping("/{username}/{fileName}/download")
     public ResponseEntity<Object> downloadFile(@PathVariable String username, @PathVariable String fileName) {
         byte[] data = fileService.downloadFile(username, fileName);
@@ -57,6 +74,15 @@ public class RequestController {
                 .body(resource);
     }
 
+    /**
+     * Проверяет разрешение на скачивание файла
+     * @param ownerName логин владельца файла
+     * @param recipientName логин получателя файла
+     * @param fileName имя файла
+     * @param http объект HttpSession
+     * @param model объект Model
+     * @return представление с запросом разрешения на скачивание файла
+     */
     @GetMapping("/{ownerName}/{recipientName}/{fileName}/isPermitted")
     public String downloadFilePermission(@PathVariable String ownerName, @PathVariable String recipientName, @PathVariable String fileName, HttpSession http, Model model) {
         User currentUser = (User) http.getAttribute("user");
@@ -75,6 +101,15 @@ public class RequestController {
         return "/isPermitted";
     }
 
+    /**
+     * Подтверждает разрешение на скачивание файла
+     * @param ownerName логин владельца файла
+     * @param recipientName логин получателя файла
+     * @param fileName имя файла
+     * @param http объект HttpSession
+     * @param model объект Model
+     * @return представление с запросом разрешения на скачивание файла
+     */
     @GetMapping("/{ownerName}/{recipientName}/{fileName}/isPermitted/yes")
     public String allowDownloadFile(@PathVariable String ownerName, @PathVariable String recipientName, @PathVariable String fileName, HttpSession http, Model model) {
         Request request = (Request) http.getAttribute("req");
@@ -83,6 +118,14 @@ public class RequestController {
         return "redirect:/files";
     }
 
+    /**
+     * Отклоняет разрешение на скачивание файла
+     * @param ownerName логин владельца файла
+     * @param recipientName логин получателя файла
+     * @param fileName имя файла
+     * @param http объект HttpSession
+     * @return представление с запросом разрешения на скачивание файла
+     */
     @GetMapping("/{ownerName}/{recipientName}/{fileName}/isPermitted/no")
     public String notAllowDownloadFile(@PathVariable String ownerName, @PathVariable String recipientName, @PathVariable String fileName, HttpSession http) {
         Request request = (Request) http.getAttribute("req");
@@ -90,5 +133,4 @@ public class RequestController {
         http.removeAttribute("req");
         return "redirect:/files";
     }
-
 }

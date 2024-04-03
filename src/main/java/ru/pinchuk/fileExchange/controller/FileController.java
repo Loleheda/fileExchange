@@ -15,6 +15,9 @@ import ru.pinchuk.fileExchange.service.MinioService;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
+/**
+ * Контроллер для управления файлами пользователей
+ */
 @Controller
 @RequestMapping("/files")
 public class FileController {
@@ -27,6 +30,13 @@ public class FileController {
         this.minioService = minioService;
     }
 
+    /**
+     * Отображает список файлов пользователя
+     *
+     * @param model объект Model для передачи данных в представление
+     * @param http  объект HttpSession
+     * @return представление списка файлов
+     */
     @GetMapping()
     public String getFiles(Model model, HttpSession http) {
         List<Result<Item>> files = minioService.getObjectsByUser((User) http.getAttribute("user"));
@@ -34,18 +44,37 @@ public class FileController {
         return "/files";
     }
 
+    /**
+     * Отображает форму добавления файла
+     *
+     * @return представление формы добавления файла
+     */
     @GetMapping("/add")
     public String addFile() {
         return "/addFile";
     }
 
+    /**
+     * Добовляет файл
+     *
+     * @param file MultipartFile, загружаемый файл
+     * @param http объект HttpSession
+     * @return перенаправление на список файлов
+     */
     @PostMapping("/add")
     public String addFile(@RequestParam("file") MultipartFile file, HttpSession http) {
         fileService.addFile(file, (User) http.getAttribute("user"));
         return "redirect:/files";
     }
 
-    @DeleteMapping("/{fileName}/delete")
+    /**
+     * Удаляет файла.
+     *
+     * @param fileName имя файла для удаления
+     * @param http     объект HttpSession
+     * @return перенаправление на список файлов
+     */
+    @GetMapping("/{fileName}/delete")
     public String deleteFile(@PathVariable String fileName, HttpSession http) {
         fileService.deleteFile(fileName, (User) http.getAttribute("user"));
         return "redirect:/files";
