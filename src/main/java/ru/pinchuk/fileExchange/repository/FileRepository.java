@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 import ru.pinchuk.fileExchange.entity.File;
 import ru.pinchuk.fileExchange.entity.User;
 
-import java.util.List;
 
 @Repository
 public interface FileRepository extends JpaRepository<File, Long> {

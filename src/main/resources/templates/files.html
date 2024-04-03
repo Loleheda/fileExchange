@@ -24,8 +24,6 @@
                 </tr>
                 <tr th:each="obj: ${res}">
                     <td th:text="${{obj.get().objectName()}}"/>
-<!--                    <td th:text="${{#numbers.formatDecimal(obj.get().size(), 2, 2, 'COMMA')}}"/>-->
-<!--                    <td th:text="${{#object.Long(obj.get().size()).doubleValue()}}"/>-->
                     <td th:text="${{obj.get().size()}}"/>
                     <td>
                         <div>

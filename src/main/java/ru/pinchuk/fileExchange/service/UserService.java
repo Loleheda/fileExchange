@@ -1,6 +1,5 @@
 package ru.pinchuk.fileExchange.service;
 
-import ru.pinchuk.fileExchange.entity.RequestStatus;
 import ru.pinchuk.fileExchange.entity.User;
 
 import java.util.List;

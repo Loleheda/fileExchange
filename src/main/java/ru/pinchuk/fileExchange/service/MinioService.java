@@ -3,7 +3,6 @@ package ru.pinchuk.fileExchange.service;
 import io.minio.Result;
 import io.minio.messages.Item;
 import org.springframework.web.multipart.MultipartFile;
-import ru.pinchuk.fileExchange.entity.File;
 import ru.pinchuk.fileExchange.entity.User;
 
 import java.util.List;

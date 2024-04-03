@@ -1,7 +1,6 @@
 package ru.pinchuk.fileExchange.service;
 
 import ru.pinchuk.fileExchange.entity.Role;
-import ru.pinchuk.fileExchange.entity.User;
 
 /**
  * Сервис для управления ролями пользователей.
