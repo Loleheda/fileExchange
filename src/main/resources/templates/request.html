@@ -10,8 +10,8 @@
     <div class="basis">
         <div class="box">
             <div th:switch="${req.getStatus().getName()}">
-                <h3 th:case="'Заблокирован'">Пользователь <span th:text="${req.getFile().getOwner().getLogin()}"></span> ограничил права на скачивание данного файла</h3>
-                <h3 th:case="'Отправлен отправителю'">Запрос на подтверждение скачивания файла отправлен пользователю <span th:text="${req.getFile().getOwner().getLogin()}"></span></h3>
+                <h3 th:case="'LOCKED'">Пользователь <span th:text="${req.getFile().getOwner().getLogin()}"></span> ограничил права на скачивание данного файла</h3>
+                <h3 th:case="'SENT'">Запрос на подтверждение скачивания файла отправлен пользователю <span th:text="${req.getFile().getOwner().getLogin()}"></span></h3>
             </div>
         </div>
     </div>

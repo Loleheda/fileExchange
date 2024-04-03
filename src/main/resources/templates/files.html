@@ -18,12 +18,14 @@
                     <th>Размер</th>
                     <th style="width: 150px;">
                         <form method="get" action="/files/add">
-                            <button type="submit" img>Добавить файл</button>
+                            <button type="submit">Добавить файл</button>
                         </form>
                     </th>
                 </tr>
                 <tr th:each="obj: ${res}">
                     <td th:text="${{obj.get().objectName()}}"/>
+<!--                    <td th:text="${{#numbers.formatDecimal(obj.get().size(), 2, 2, 'COMMA')}}"/>-->
+<!--                    <td th:text="${{#object.Long(obj.get().size()).doubleValue()}}"/>-->
                     <td th:text="${{obj.get().size()}}"/>
                     <td>
                         <div>

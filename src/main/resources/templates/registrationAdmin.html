@@ -8,11 +8,11 @@
 </head>
 <body>
 <div class="basis">
-    <form class="box" method="post" th:action="@{/admin/add}" th:object="${admin}">
+    <form class="box" method="post" th:action="@{/admin/add}">
         <h1>Регистрация администратора</h1>
-        <input type="text" placeholder="Введите логин" name="login" th:field="*{login}">
-        <input type="email" placeholder="Введите почту" name="email" th:field="*{email}">
-        <input type="password" placeholder="Введите пароль" name="password" th:field="*{password}">
+        <input type="text" placeholder="Введите логин" name="login">
+        <input type="email" placeholder="Введите почту" name="email">
+        <input type="password" placeholder="Введите пароль" name="password">
         <button type="submit">Зарегистрироваться</button>
     </form>
     <form method="get" action="/admin" class="separateButton">

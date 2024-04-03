@@ -10,7 +10,6 @@ import ru.pinchuk.fileExchange.repository.FileRepository;
 import ru.pinchuk.fileExchange.service.FileService;
 import ru.pinchuk.fileExchange.service.MinioService;
 
-import java.util.List;
 
 @Service
 public class FileServiceImpl implements FileService {
@@ -25,20 +24,10 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public List<File> getFilesByOwner(User user) {
-        return fileRepository.findFilesByOwner(user);
-    }
-
-    @Override
     public File getFile(String name, User user) {
         return fileRepository.findByOwnerAndName(user, name);
     }
 
-    /**
-     * @param login
-     * @param fileName
-     * @return
-     */
     @Override
     public byte[] downloadFile(String login, String fileName) {
         minioService.downloadObject(login, fileName);

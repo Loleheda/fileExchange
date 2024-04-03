@@ -7,10 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriComponentsBuilder;
 import ru.pinchuk.fileExchange.entity.Request;
-import ru.pinchuk.fileExchange.entity.RequestStatus;
 import ru.pinchuk.fileExchange.entity.User;
 import ru.pinchuk.fileExchange.service.FileService;
 import ru.pinchuk.fileExchange.service.RequestService;
@@ -40,7 +38,7 @@ public class RequestController {
     public String showRequest(@PathVariable String username, @PathVariable String fileName, HttpSession http, Model model) {
         User currentUser = (User) http.getAttribute("user");
         Request request = requestService.getByRecipientAndFile(currentUser, username, fileName);
-        if (request.getStatus().getName().equals("Доступен")) {
+        if (request.getStatus().getName().equals("AVAILABLE")) {
             return String.format("redirect:/request/%s/%s/download", username, fileName);
         }
         model.addAttribute("req", request);
@@ -48,7 +46,7 @@ public class RequestController {
     }
 
     @GetMapping("/{username}/{fileName}/download")
-    public ResponseEntity<Object> downloadFile(@PathVariable String username, @PathVariable String fileName, HttpSession http) {
+    public ResponseEntity<Object> downloadFile(@PathVariable String username, @PathVariable String fileName) {
         byte[] data = fileService.downloadFile(username, fileName);
         ByteArrayResource resource = new ByteArrayResource(data);
         return ResponseEntity
@@ -80,15 +78,15 @@ public class RequestController {
     @GetMapping("/{ownerName}/{recipientName}/{fileName}/isPermitted/yes")
     public String allowDownloadFile(@PathVariable String ownerName, @PathVariable String recipientName, @PathVariable String fileName, HttpSession http, Model model) {
         Request request = (Request) http.getAttribute("req");
-        requestService.updateStatus(request, statusService.getByName("Доступен"));
+        requestService.updateStatus(request, statusService.getByName("AVAILABLE"));
         http.removeAttribute("req");
         return "redirect:/files";
     }
 
     @GetMapping("/{ownerName}/{recipientName}/{fileName}/isPermitted/no")
-    public String notAllowDownloadFile(@PathVariable String ownerName, @PathVariable String recipientName, @PathVariable String fileName, HttpSession http, Model model) {
+    public String notAllowDownloadFile(@PathVariable String ownerName, @PathVariable String recipientName, @PathVariable String fileName, HttpSession http) {
         Request request = (Request) http.getAttribute("req");
-        requestService.updateStatus(request, statusService.getByName("Заблокирован"));
+        requestService.updateStatus(request, statusService.getByName("LOCKED"));
         http.removeAttribute("req");
         return "redirect:/files";
     }

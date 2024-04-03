@@ -33,6 +33,14 @@ public class User {
         this.role = role;
     }
 
+    public User(Long id, String login, String password, String email, Role role) {
+        this.id = id;
+        this.login = login;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+    }
+
     public Long getId() {
         return id;
     }

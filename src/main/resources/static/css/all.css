@@ -72,3 +72,8 @@ button {
 .separateButton {
     text-align: center;
 }
+
+.error {
+    text-align: center;
+    color: #DC94F4;
+}

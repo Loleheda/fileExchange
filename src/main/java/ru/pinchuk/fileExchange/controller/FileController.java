@@ -45,7 +45,7 @@ public class FileController {
         return "redirect:/files";
     }
 
-    @GetMapping("/{fileName}/delete")
+    @DeleteMapping("/{fileName}/delete")
     public String deleteFile(@PathVariable String fileName, HttpSession http) {
         fileService.deleteFile(fileName, (User) http.getAttribute("user"));
         return "redirect:/files";

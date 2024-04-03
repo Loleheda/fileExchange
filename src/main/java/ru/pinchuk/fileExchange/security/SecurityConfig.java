@@ -8,13 +8,15 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import ru.pinchuk.fileExchange.service.UserService;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CustomUserDetailsService userDetailsService;
+    private final String ROLE_ADMIN = "ADMIN";
+    private final String ROLE_USER = "USER";
 
     public SecurityConfig(CustomUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
@@ -33,29 +35,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        String adminRole = "ADMIN";
-        String userRole = "USER";
-
         http
                 .csrf().disable()
                 .authorizeRequests()
                     .antMatchers("/registration").permitAll()
-                    .antMatchers("/files/**").hasRole(userRole)
-                    .antMatchers("/request/**").hasRole(userRole)
-                    .antMatchers("/admin/**").hasRole(adminRole)
+                    .antMatchers("/files/**").hasRole(ROLE_USER)
+                    .antMatchers("/request/**").hasRole(ROLE_USER)
+                    .antMatchers("/admin/**").hasRole(ROLE_ADMIN)
                     .anyRequest().authenticated()
                 .and()
                 .formLogin()
                     .loginPage("/login")
+                    .failureUrl("/login?error=true")
                     .defaultSuccessUrl("/login/distribution", true).permitAll()
-                .and()
-                .logout().permitAll()
                 .and()
                 .logout()
                     .logoutUrl("/logout")
                     .logoutSuccessUrl("/login")
-                    .invalidateHttpSession(true)
-                    .deleteCookies("JSESSIONID");
+                    .permitAll()
+                    .invalidateHttpSession(true);
     }
 
     @Bean

@@ -11,8 +11,12 @@
     <form class="box" method="post" th:action="registration">
         <h1>Регистрация</h1>
         <input type="text" placeholder="Введите логин" name="login">
+        <div class="error" th:if="${errorLoginExistMessage}" th:text="${errorLoginExistMessage}"></div>
+        <div class="error" th:if="${errorLoginLengthMessage}" th:text="${errorLoginLengthMessage}"></div>
         <input type="email" placeholder="Введите почту" name="email">
+        <div class="error" th:if="${errorEmailExistMessage}" th:text="${errorEmailExistMessage}"></div>
         <input type="password" placeholder="Введите пароль" name="password">
+        <div class="error" th:if="${errorPasswordLengthMessage}" th:text="${errorPasswordLengthMessage}"></div>
         <button type="submit">Зарегистрироваться</button>
     </form>
     <form method="get" action="/login" class="separateButton">

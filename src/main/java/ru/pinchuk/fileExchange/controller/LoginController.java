@@ -2,8 +2,10 @@ package ru.pinchuk.fileExchange.controller;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import ru.pinchuk.fileExchange.entity.User;
 import ru.pinchuk.fileExchange.service.UserService;
 
@@ -19,8 +21,11 @@ public class LoginController {
         this.userService = userService;
     }
 
-    @GetMapping()
-    public String getLogin() {
+    @GetMapping
+    public String showLoginError(@RequestParam(required = false) Boolean error, Model model) {
+        if (error != null && error) {
+            model.addAttribute("errorMessage", "Не верный логин или пароль");
+        }
         return "/login";
     }
 
@@ -33,5 +38,4 @@ public class LoginController {
         }
         return "redirect:/files";
     }
-
 }

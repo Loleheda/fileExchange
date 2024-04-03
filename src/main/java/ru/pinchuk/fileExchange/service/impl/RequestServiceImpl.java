@@ -39,7 +39,7 @@ public class RequestServiceImpl implements RequestService {
             request = addRequest(recipient, username, fileName);
             requestRepository.save(request);
             emailService.sendEmail(request);
-        } else if (request.getStatus().getName().equals("Доступен")) {
+        } else if (request.getStatus().getName().equals("AVAILABLE")) {
             minioService.downloadObject(owner.getLogin(), fileName);
         }
         return request;
@@ -52,18 +52,13 @@ public class RequestServiceImpl implements RequestService {
         if (file == null) {
             return null;
         }
-        RequestStatus status = statusService.getByName("Отправлен отправителю");
+        RequestStatus status = statusService.getByName("SENT");
         Request request = new Request(recipient, file, status);
         requestRepository.save(request);
         System.out.println("Запрос на файл " + fileName + " пользователя " + username + " создан");
         return request;
     }
 
-    /**
-     * @param request
-     * @param status
-     * @return
-     */
     @Override
     public Request updateStatus(Request request, RequestStatus status) {
         request.setStatus(status);

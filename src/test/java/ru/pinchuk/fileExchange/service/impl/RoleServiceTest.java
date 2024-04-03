@@ -10,7 +10,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.pinchuk.fileExchange.entity.Role;
 import ru.pinchuk.fileExchange.repository.RoleRepository;
 
-
 @ExtendWith(MockitoExtension.class)
 public class RoleServiceTest {
 
@@ -21,18 +20,30 @@ public class RoleServiceTest {
     private RoleServiceImpl roleService;
 
     @Test
-    public void addRoleTest() {
+    public void addTest() {
+        // Arrange
         String roleName = "USER";
+
+        // Act
         Role role = roleService.addRole(roleName);
+
+        // Assert
         Assertions.assertEquals(role.getName(), roleName);
     }
 
     @Test
-    public void getRoleByNameTest() {
+    public void getByNameTest() {
+        // Arrange
+        Long roleId = 1L;
         String roleName = "USER";
-        Role role1 = roleService.addRole(roleName);
-        Mockito.when(roleRepository.findByName(roleName)).thenReturn(role1);
-        Role role2 = roleService.getByName(roleName);
-        Assertions.assertEquals(role1, role2);
+        Role role = new Role(roleId, roleName);
+
+        // Act
+        Mockito.when(roleRepository.findByName(roleName)).thenReturn(role);
+        Role newRole = roleService.getByName(roleName);
+
+        // Assert
+        Assertions.assertNotNull(newRole);
+        Assertions.assertEquals(role, newRole);
     }
 }

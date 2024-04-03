@@ -1,5 +1,6 @@
 package ru.pinchuk.fileExchange.service.impl;
 
+import org.junit.BeforeClass;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,6 +33,7 @@ public class UserServiceTest {
     private String password;
     private String email;
 
+    // Arrange
     @BeforeEach
     void setUp() {
         login = "1234567890";
@@ -41,24 +43,28 @@ public class UserServiceTest {
 
     @Test
     public void addUserTest() {
+        // Act
         User user = userService.addUser(login, password, email);
+        // Assert
         Assertions.assertEquals(user, new User(login, passwordEncoder.encode(password), email, roleRepository.findByName("USER")));
     }
 
     @Test
     public void addAdminTest() {
+        // Act
         User user = userService.addAdmin(login, password, email);
+        // Assert
         Assertions.assertEquals(user, new User(login, passwordEncoder.encode(password), email, roleRepository.findByName("ADMIN")));
     }
 
     @Test
     public void deleteUserTest() {
+        // Arrange
         User user = new User();
         user.setLogin(login);
-
-        UserServiceImpl userService = new UserServiceImpl(userRepository, roleService, passwordEncoder, minioService);
+        // Act
         userService.deleteByLogin(user.getLogin());
-
+        // Assert
         Mockito.verify(userRepository, Mockito.times(1)).removeByLogin(user.getLogin());
     }
 

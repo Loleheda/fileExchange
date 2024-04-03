@@ -2,15 +2,11 @@ package ru.pinchuk.fileExchange.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import ru.pinchuk.fileExchange.entity.User;
+import org.springframework.web.bind.annotation.*;
 import ru.pinchuk.fileExchange.service.UserService;
 
 @Controller
-@RequestMapping(    "/admin")
+@RequestMapping("/admin")
 public class AdminController {
 
     private final UserService userService;
@@ -25,22 +21,21 @@ public class AdminController {
         return "/adminPanel";
     }
 
-    @GetMapping("/user/{username}/delete")
+    @DeleteMapping("/user/{username}/delete")
     public String deleteUser(@PathVariable String username) {
         Long id = userService.deleteByLogin(username);
         System.out.println("Пользователь с id: " + id + " удален");
         return "redirect:/admin";
     }
 
-    @GetMapping("/add" )
-    public String showAdmin(Model model) {
-        model.addAttribute("admin", new User());
+    @GetMapping("/add")
+    public String showAdmin() {
         return "/registrationAdmin";
     }
 
     @PostMapping("/add")
-    public String addAdmin(Model model) {
-        System.out.println(model.getAttribute("admin"));
+    public String addAdmin(String login, String password, String email) {
+        userService.addAdmin(login, password, email);
         return "redirect:/admin";
     }
 }

@@ -16,13 +16,10 @@ public class StatusServiceImpl implements StatusService {
 
     @Override
     public RequestStatus getByName(String name) {
-        return statusRepository.findByName(name);
-    }
-
-    @Override
-    public RequestStatus addStatus(String name) {
-        RequestStatus status = new RequestStatus(name);
-        statusRepository.save(status);
+        RequestStatus status = statusRepository.findByName(name);
+        if (status == null) {
+            throw new RuntimeException("Status not found: " + name);
+        }
         return status;
     }
 }

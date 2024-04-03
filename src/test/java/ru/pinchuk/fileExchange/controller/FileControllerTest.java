@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartFile;
 import ru.pinchuk.fileExchange.entity.File;
 import ru.pinchuk.fileExchange.entity.Role;
 import ru.pinchuk.fileExchange.entity.User;
@@ -69,4 +71,37 @@ public class FileControllerTest {
     }
 
 
+    @Test
+    void addFileTest() {
+        // Arrange
+        MultipartFile multipartFile = null; // Для теста файл не нужен
+        User user = new User("test","test","test",new Role("USER"));
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("user", user);
+
+        // Act
+        String viewName = fileController.addFile(multipartFile, session);
+
+        // Assert
+        Assertions.assertEquals("redirect:/files", viewName);
+        Mockito.verify(fileService, Mockito.times(1)).addFile(multipartFile, user);
+        Mockito.verifyNoMoreInteractions(fileService);
+    }
+
+    @Test
+    void deleteFileTest() {
+        // Arrange
+        String fileName = "testFile";
+        User user = new User("test","test","test",new Role("USER"));
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("user", user);
+
+        // Act
+        String viewName = fileController.deleteFile(fileName, session);
+
+        // Assert
+        Assertions.assertEquals("redirect:/files", viewName);
+        Mockito.verify(fileService, Mockito.times(1)).deleteFile(fileName, user);
+        Mockito.verifyNoMoreInteractions(fileService);
+    }
 }

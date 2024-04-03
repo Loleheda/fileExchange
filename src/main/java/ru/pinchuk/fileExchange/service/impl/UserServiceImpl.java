@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * Сервис взаимодействия с пользователями
- * */
+ */
 @Service
 public class UserServiceImpl implements ru.pinchuk.fileExchange.service.UserService {
 
