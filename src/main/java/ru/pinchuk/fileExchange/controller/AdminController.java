@@ -55,10 +55,29 @@ public class AdminController {
      * @param login    логин администратора
      * @param password пароль администратора
      * @param email    электронная администратора
-     * @return перенаправление на панель администратора
+     * @return перенаправление на панель администратора в случае успешной регистрации, иначе представление страницы регистрации с сообщениями об ошибках
      */
     @PostMapping("/add")
-    public String addAdmin(String login, String password, String email) {
+    public String addAdmin(@RequestParam(required = false) Boolean error, String login, String password, String email, Model model) {
+        if (login.length() < 3) {
+            model.addAttribute("errorLoginLengthMessage", "Логин  должен быть больше 3 символов");
+            error = true;
+        }
+        if (userService.getByLogin(login) != null) {
+            model.addAttribute("errorLoginExistMessage", "Пользователь с таким именем уже существует");
+            error = true;
+        }
+        if (userService.getByEmail(email) != null) {
+            model.addAttribute("errorEmailExistMessage", "Пользователь с такой почтой уже существует");
+            error = true;
+        }
+        if (password.length() < 3) {
+            model.addAttribute("errorPasswordLengthMessage", "Пароль  должен быть больше 3 символов");
+            error = true;
+        }
+        if (error != null && error) {
+            return "/registrationAdmin";
+        }
         userService.addAdmin(login, password, email);
         return "redirect:/admin";
     }

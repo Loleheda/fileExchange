@@ -74,10 +74,10 @@ class AdminControllerTest {
         // Arrange
         String login = "newAdmin";
         String password = "admin123";
-        String email = "admin@example.com";
+        String email = "admin@gmail.com";
 
         // Act
-        String result = adminController.addAdmin(login, password, email);
+        String result = adminController.addAdmin(false, login, password, email, model);
 
         // Assert
         assertEquals("redirect:/admin", result);

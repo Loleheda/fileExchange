@@ -1,12 +1,14 @@
 package ru.pinchuk.fileExchange.service.impl;
 
-import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ru.pinchuk.fileExchange.entity.User;
@@ -45,7 +47,7 @@ public class UserServiceTest {
         // Act
         User user = userService.addUser(login, password, email);
         // Assert
-        Assertions.assertEquals(user, new User(login, passwordEncoder.encode(password), email, roleRepository.findByName("USER")));
+        assertEquals(user, new User(login, passwordEncoder.encode(password), email, roleRepository.findByName("USER")));
     }
 
     @Test
@@ -53,7 +55,7 @@ public class UserServiceTest {
         // Act
         User user = userService.addAdmin(login, password, email);
         // Assert
-        Assertions.assertEquals(user, new User(login, passwordEncoder.encode(password), email, roleRepository.findByName("ADMIN")));
+        assertEquals(user, new User(login, passwordEncoder.encode(password), email, roleRepository.findByName("ADMIN")));
     }
 
     @Test
@@ -64,7 +66,7 @@ public class UserServiceTest {
         // Act
         userService.deleteByLogin(user.getLogin());
         // Assert
-        Mockito.verify(userRepository, Mockito.times(1)).removeByLogin(user.getLogin());
+        verify(userRepository, times(1)).removeByLogin(user.getLogin());
     }
 
 }

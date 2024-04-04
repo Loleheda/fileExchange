@@ -1,12 +1,14 @@
 package ru.pinchuk.fileExchange.controller;
 
-import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -64,7 +66,7 @@ public class FileControllerTest {
         httpSession.setAttribute("user", user);
         String view = fileController.getFiles(model, httpSession);
 
-        Assertions.assertEquals("/files",  view);
+        assertEquals("/files",  view);
     }
 
 
@@ -80,9 +82,9 @@ public class FileControllerTest {
         String viewName = fileController.addFile(multipartFile, session);
 
         // Assert
-        Assertions.assertEquals("redirect:/files", viewName);
-        Mockito.verify(fileService, Mockito.times(1)).addFile(multipartFile, user);
-        Mockito.verifyNoMoreInteractions(fileService);
+        assertEquals("redirect:/files", viewName);
+        verify(fileService, times(1)).addFile(multipartFile, user);
+        verifyNoMoreInteractions(fileService);
     }
 
     @Test
@@ -97,8 +99,8 @@ public class FileControllerTest {
         String viewName = fileController.deleteFile(fileName, session);
 
         // Assert
-        Assertions.assertEquals("redirect:/files", viewName);
-        Mockito.verify(fileService, Mockito.times(1)).deleteFile(fileName, user);
-        Mockito.verifyNoMoreInteractions(fileService);
+        assertEquals("redirect:/files", viewName);
+        verify(fileService, times(1)).deleteFile(fileName, user);
+        verifyNoMoreInteractions(fileService);
     }
 }

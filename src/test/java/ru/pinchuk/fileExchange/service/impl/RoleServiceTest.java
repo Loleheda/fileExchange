@@ -1,11 +1,12 @@
 package ru.pinchuk.fileExchange.service.impl;
 
-import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
+import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.pinchuk.fileExchange.entity.Role;
 import ru.pinchuk.fileExchange.repository.RoleRepository;
@@ -28,7 +29,7 @@ public class RoleServiceTest {
         Role role = roleService.addRole(roleName);
 
         // Assert
-        Assertions.assertEquals(role.getName(), roleName);
+        assertEquals(role.getName(), roleName);
     }
 
     @Test
@@ -39,11 +40,11 @@ public class RoleServiceTest {
         Role role = new Role(roleId, roleName);
 
         // Act
-        Mockito.when(roleRepository.findByName(roleName)).thenReturn(role);
+        when(roleRepository.findByName(roleName)).thenReturn(role);
         Role newRole = roleService.getByName(roleName);
 
         // Assert
-        Assertions.assertNotNull(newRole);
-        Assertions.assertEquals(role, newRole);
+        assertNotNull(newRole);
+        assertEquals(role, newRole);
     }
 }

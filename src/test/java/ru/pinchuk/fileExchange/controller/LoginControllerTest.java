@@ -4,7 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -37,7 +38,7 @@ class LoginControllerTest {
     @Test
     void showLoginErrorWhenErrorIsTrueTest() {
         String errorMessage = "Не верный логин или пароль";
-        Mockito.when(model.addAttribute("errorMessage", errorMessage)).thenReturn(null);
+        when(model.addAttribute("errorMessage", errorMessage)).thenReturn(null);
         String result = loginController.showLogin(true, model);
         assertEquals("/login", result);
     }
@@ -55,11 +56,11 @@ class LoginControllerTest {
         admin.setLogin("admin");
         admin.setRole(new Role("ADMIN"));
 
-        Mockito.when(userService.getByLogin(anyString())).thenReturn(admin);
-        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-        Authentication authentication = Mockito.mock(Authentication.class);
-        Mockito.when(authentication.getName()).thenReturn(admin.getLogin());
-        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(userService.getByLogin(anyString())).thenReturn(admin);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getName()).thenReturn(admin.getLogin());
+        when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
 
         // Act
@@ -76,11 +77,11 @@ class LoginControllerTest {
         admin.setLogin("user");
         admin.setRole(new Role("USER"));
 
-        Mockito.when(userService.getByLogin(anyString())).thenReturn(admin);
-        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-        Authentication authentication = Mockito.mock(Authentication.class);
-        Mockito.when(authentication.getName()).thenReturn(admin.getLogin());
-        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(userService.getByLogin(anyString())).thenReturn(admin);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getName()).thenReturn(admin.getLogin());
+        when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
 
         // Act

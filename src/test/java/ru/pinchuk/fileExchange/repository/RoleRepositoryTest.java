@@ -14,9 +14,14 @@ class RoleRepositoryTest {
 
     @Test
     void findRoleByNameTest() {
+        // Arrange
         String roleName = "ROLE_TEST";
         Role role = roleRepository.save(new Role(roleName));
+
+        // Act
         Role newRole = roleRepository.findByName(roleName);
+
+        // Assert
         Assertions.assertEquals(role, newRole);
     }
 }
